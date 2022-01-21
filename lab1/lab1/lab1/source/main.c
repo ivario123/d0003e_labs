@@ -8,8 +8,6 @@
 #include <avr/io.h>
 #include "avr/iom169p.h"
 #include "lcd_driver.h"
-#define MAX_POS 0
-#define MIN_POS 5
 
 
 int init(void){

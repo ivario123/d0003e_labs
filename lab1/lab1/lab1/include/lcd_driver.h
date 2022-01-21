@@ -8,6 +8,8 @@
 
 #ifndef LCD_DRIVER_H_
 #define LCD_DRIVER_H_
+#define MAX_POS 0
+#define MIN_POS 5
 #include "lcd_driver.c"
 
 enum ERROR{
