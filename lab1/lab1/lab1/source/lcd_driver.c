@@ -20,6 +20,9 @@ int write_char(char ch,int pos){
 int init_lcd(){
 		
 		
+		//-----------------------------------
+		// Status manipulation
+		//-----------------------------------
 		// enabling the lcd
 		*LCDCRA = (*LCDCRA)|(1<<LCDEN);
 		// Setting low power wave form
@@ -30,10 +33,35 @@ int init_lcd(){
 		*LCDCRA = (*LCDCRA)&(~(1));
 		
 		
+		//-----------------------------------
+		// Clock manipulation
+		//-----------------------------------
+		
 		// setting the clock source to external
 		*LCDCRB = (*LCDCRB)&(~(1<<LCDCS));
+		// Setting Bias
 		*LCDCRB = (*LCDCRB)&(~(1<<LCD2B));
+		// Setting duty cycle
 		*LCDCRB = (*LCDCRB)&(~(3<<LCDMUX0));
+		
+		
+		//-----------------------------------
+		// Frame rate manipulation
+		//-----------------------------------
+		// Set n = 16
+		*LCDFRR = (*LCDFRR)&(~(8<<LCDPS0));
+		// Set D = 8
+		*LCDFRR = (*LCDFRR)||(8);
+		
+		
+		//-----------------------------------
+		// Contrast manipulation
+		//-----------------------------------
+		// Setting msb->msb-2 to 0 to set drive time to 300 us
+		*LCDCCR = (*LCDCCR)&(~(8<< LCDDC0));
+		// Setting lsb -> lsb+3 to 1 to set voltage to 3.35V 
+		*LCDCCR = (*LCDCCR)&((16));
+		
 		
 		
 		
