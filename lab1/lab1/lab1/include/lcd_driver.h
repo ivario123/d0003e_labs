@@ -10,12 +10,11 @@
 #define LCD_DRIVER_H_
 #define MAX_POS 0
 #define MIN_POS 5
-#include "lcd_driver.c"
-
+#include "dictionary.h"
 enum ERROR{
 	success = 0,
 	startup = 1,
-	writechar = 1;
+	writechar = 1
 	};
 
 

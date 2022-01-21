@@ -7,7 +7,7 @@
 
 #include <avr/io.h>
 #include "avr/iom169p.h"
-#include "lcd_driver.h"
+#include "../include/lcd_driver.h"
 
 
 int init(void){
@@ -20,7 +20,8 @@ int init(void){
 
 int main(void)
 {
-	init();
+	if(success != init())
+		while(1);	// Blink onboard LED or something indicating error
 	if(success != init_lcd())
 		while(1);	// Blink onboard LED or something indicating error
     while (1) 

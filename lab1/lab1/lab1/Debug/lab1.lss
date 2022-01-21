@@ -1,0 +1,205 @@
+
+lab1.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         00000000  00800100  00800100  0000014e  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         000000fa  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .comment      00000030  00000000  00000000  0000014e  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000180  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000050  00000000  00000000  000001c0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   000009a4  00000000  00000000  00000210  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 000008a2  00000000  00000000  00000bb4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   00000366  00000000  00000000  00001456  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000068  00000000  00000000  000017bc  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    0000044f  00000000  00000000  00001824  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    00000021  00000000  00000000  00001c73  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000030  00000000  00000000  00001c94  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2e 00 	jmp	0x5c	; 0x5c <__ctors_end>
+   4:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+   8:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+   c:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+  10:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+  14:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+  18:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+  1c:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+  20:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+  24:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+  28:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+  2c:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+  30:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+  34:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+  38:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+  3c:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+  40:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+  44:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+  48:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+  4c:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+  50:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+  54:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+  58:	0c 94 38 00 	jmp	0x70	; 0x70 <__bad_interrupt>
+
+0000005c <__ctors_end>:
+  5c:	11 24       	eor	r1, r1
+  5e:	1f be       	out	0x3f, r1	; 63
+  60:	cf ef       	ldi	r28, 0xFF	; 255
+  62:	d4 e0       	ldi	r29, 0x04	; 4
+  64:	de bf       	out	0x3e, r29	; 62
+  66:	cd bf       	out	0x3d, r28	; 61
+  68:	0e 94 70 00 	call	0xe0	; 0xe0 <main>
+  6c:	0c 94 7b 00 	jmp	0xf6	; 0xf6 <_exit>
+
+00000070 <__bad_interrupt>:
+  70:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000074 <init_lcd>:
+		
+		//-----------------------------------
+		// Status manipulation
+		//-----------------------------------
+		// enabling the lcd
+		LCDCRA = LCDCRA|(1<<LCDEN);
+  74:	e4 ee       	ldi	r30, 0xE4	; 228
+  76:	f0 e0       	ldi	r31, 0x00	; 0
+  78:	80 81       	ld	r24, Z
+  7a:	80 68       	ori	r24, 0x80	; 128
+  7c:	80 83       	st	Z, r24
+		// Setting low power wave form
+		LCDCRA = LCDCRA|(1<<LCDAB);
+  7e:	80 81       	ld	r24, Z
+  80:	80 64       	ori	r24, 0x40	; 64
+  82:	80 83       	st	Z, r24
+		// disabling the interrupt
+		LCDCRA = LCDCRA&(~(1<<LCDIF));
+  84:	80 81       	ld	r24, Z
+  86:	8f 7e       	andi	r24, 0xEF	; 239
+  88:	80 83       	st	Z, r24
+		// Disabling blanking
+		LCDCRA = LCDCRA&(~(1));
+  8a:	80 81       	ld	r24, Z
+  8c:	8e 7f       	andi	r24, 0xFE	; 254
+  8e:	80 83       	st	Z, r24
+		//-----------------------------------
+		// Clock manipulation
+		//-----------------------------------
+		
+		// setting the clock source to external
+		LCDCRB = LCDCRB&(~(1<<LCDCS));
+  90:	e5 ee       	ldi	r30, 0xE5	; 229
+  92:	f0 e0       	ldi	r31, 0x00	; 0
+  94:	80 81       	ld	r24, Z
+  96:	8f 77       	andi	r24, 0x7F	; 127
+  98:	80 83       	st	Z, r24
+		// Setting Bias
+		LCDCRB = LCDCRB&(~(1<<LCD2B));
+  9a:	80 81       	ld	r24, Z
+  9c:	8f 7b       	andi	r24, 0xBF	; 191
+  9e:	80 83       	st	Z, r24
+		// Setting duty cycle
+		LCDCRB = LCDCRB&(~(3<<LCDMUX0));
+  a0:	80 81       	ld	r24, Z
+  a2:	8f 7c       	andi	r24, 0xCF	; 207
+  a4:	80 83       	st	Z, r24
+		// Setting number of active segments to 25
+		LCDCRB = LCDCRB|(3);
+  a6:	80 81       	ld	r24, Z
+  a8:	83 60       	ori	r24, 0x03	; 3
+  aa:	80 83       	st	Z, r24
+		
+		//-----------------------------------
+		// Frame rate manipulation
+		//-----------------------------------
+		// Set n = 16
+		LCDFRR = LCDFRR&(~(8<<LCDPS0));
+  ac:	e6 ee       	ldi	r30, 0xE6	; 230
+  ae:	f0 e0       	ldi	r31, 0x00	; 0
+  b0:	80 81       	ld	r24, Z
+  b2:	8f 77       	andi	r24, 0x7F	; 127
+  b4:	80 83       	st	Z, r24
+		// Set D = 8
+		LCDFRR = LCDFRR||(8);
+  b6:	80 81       	ld	r24, Z
+  b8:	81 e0       	ldi	r24, 0x01	; 1
+  ba:	80 83       	st	Z, r24
+		
+		//-----------------------------------
+		// Contrast manipulation
+		//-----------------------------------
+		// Setting msb->msb-2 to 0 to set drive time to 300 us
+		LCDCCR = LCDCCR&(~(8<< LCDDC0));
+  bc:	e7 ee       	ldi	r30, 0xE7	; 231
+  be:	f0 e0       	ldi	r31, 0x00	; 0
+  c0:	80 81       	ld	r24, Z
+  c2:	80 83       	st	Z, r24
+		// Setting lsb -> lsb+3 to 1 to set voltage to 3.35V 
+		LCDCCR = LCDCCR&((16));
+  c4:	80 81       	ld	r24, Z
+  c6:	80 71       	andi	r24, 0x10	; 16
+  c8:	80 83       	st	Z, r24
+		// Setting the contrast voltage to3.35v and drive time to 300ms
+		//*LCDCCR = (*LCDCCR)&0b11111000;
+		// Setting the
+		//*LCDFRR = (*LCDFRR)&0b10001111;
+		return success;
+  ca:	80 e0       	ldi	r24, 0x00	; 0
+  cc:	90 e0       	ldi	r25, 0x00	; 0
+  ce:	08 95       	ret
+
+000000d0 <init>:
+#include "../include/lcd_driver.h"
+
+
+int init(void){
+	// Setting power options
+	CLKPR = 0x80;
+  d0:	e1 e6       	ldi	r30, 0x61	; 97
+  d2:	f0 e0       	ldi	r31, 0x00	; 0
+  d4:	80 e8       	ldi	r24, 0x80	; 128
+  d6:	80 83       	st	Z, r24
+	CLKPR = 0X00;
+  d8:	10 82       	st	Z, r1
+	
+	return success;
+}
+  da:	80 e0       	ldi	r24, 0x00	; 0
+  dc:	90 e0       	ldi	r25, 0x00	; 0
+  de:	08 95       	ret
+
+000000e0 <main>:
+
+int main(void)
+{
+	if(success != init())
+  e0:	0e 94 68 00 	call	0xd0	; 0xd0 <init>
+  e4:	89 2b       	or	r24, r25
+  e6:	09 f0       	breq	.+2      	; 0xea <main+0xa>
+  e8:	ff cf       	rjmp	.-2      	; 0xe8 <main+0x8>
+		while(1);	// Blink onboard LED or something indicating error
+	if(success != init_lcd())
+  ea:	0e 94 3a 00 	call	0x74	; 0x74 <init_lcd>
+  ee:	89 2b       	or	r24, r25
+  f0:	09 f0       	breq	.+2      	; 0xf4 <main+0x14>
+  f2:	ff cf       	rjmp	.-2      	; 0xf2 <main+0x12>
+  f4:	ff cf       	rjmp	.-2      	; 0xf4 <main+0x14>
+
+000000f6 <_exit>:
+  f6:	f8 94       	cli
+
+000000f8 <__stop_program>:
+  f8:	ff cf       	rjmp	.-2      	; 0xf8 <__stop_program>
