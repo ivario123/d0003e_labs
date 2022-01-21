@@ -24,6 +24,7 @@ int main(void)
 		while(1);	// Blink onboard LED or something indicating error
 	if(success != init_lcd())
 		while(1);	// Blink onboard LED or something indicating error
+	write_char('a',1);
     while (1) 
     {
 		
