@@ -8,9 +8,13 @@
 
 #ifndef LCD_DRIVER_H_
 #define LCD_DRIVER_H_
+
+
 #define MAX_POS 0
 #define MIN_POS 5
 #include "dictionary.h"
+#include <stdint-gcc.h>
+#include <avr/io.h>
 enum ERROR{
 	success = 0,
 	startup = 1,
@@ -33,6 +37,12 @@ int init_lcd ();
 int write_char(char ch,int pos);
 
 
+int three_least_significant(long num);
 
+int int_to_str(uint8_t num,char* buffer);
 
+int is_prime(long num);
+
+int primes();
+int toggle_led();
 #endif /* LCD_DRIVER_H_ */

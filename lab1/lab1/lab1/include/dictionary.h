@@ -10,7 +10,8 @@
 #define DICTIONARY_H_
 
 enum dictionary{
-	A = 0x0F51
+	A_LSB = 0x51,
+	A_MSB = 0x0F
 	};
 
 
