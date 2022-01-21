@@ -74,3 +74,44 @@ int init_lcd(){
 		//*LCDFRR = (*LCDFRR)&0b10001111;
 		return success;
 }
+
+
+int three_least_significant(long num){
+	return (volatile int)num-(num/100)*100;
+}
+int int_to_str(uint8_t num,char* buffer){
+	while (num)
+	{
+		*buffer = (volatile char) num-(num/10)*10+48;
+		num/=10;
+		buffer++;
+	}
+	*buffer = '\0';
+	return success;
+}
+int is_prime(long num){
+	// basecases 0-3
+	if (num <= 3)
+		return 1;
+	// basecase num is eaven
+	if(num%2 == 0)
+		return 0;
+	// Start on 3
+	int counter = 3;
+	// Only check odd numbers up to half of num
+	while(counter <num/2){
+		if(num%counter == 0)
+			return 1;
+		counter+=2;
+	}
+	return 0;
+}
+
+int primes(){
+	while(1)
+	{
+		// Get next prime
+		// Convert to string
+		// Print string to screen
+	}
+}
