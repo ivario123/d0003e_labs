@@ -29,7 +29,16 @@ int init(void){
 	
 	return success;
 }
-
+int blink(){
+	
+	// uint16t's wrap around in the same way for timer and normal addition
+	while(1){
+		while(((uint16_t)TCNT1)!= last_time+freq);
+		last_time =(uint16_t)TCNT1;
+		toggle_led();
+	}
+	return 0;
+}
 int button(){
 	uint8_t prev_value = 1;
 	
@@ -41,6 +50,28 @@ int button(){
 	
 }
 
+long next_prime(long num){
+	while(1)
+	{
+		if(num >= 3){
+			if (num%2 == 0)
+			num++;
+			else
+			num +=2;
+		}
+		else
+		num++;
+		if(is_prime(num)==1){
+			return num;
+		}
+		// Print string to screen
+	}
+}
+
+
+
+
+
 int main(void)
 {
 	if(success != init())
@@ -50,9 +81,19 @@ int main(void)
 	//write_char('a',1);
 	//blink();
 	//button();
-	primes();
+	//primes();
     while(1) 
-    {
+    {	uint16_t freq = 31250/2;		// The segment should turn on and of every half cycle i.e flicker with 2 Hz frequenzy
+	    uint16_t last_time = TCNT1;
+		long num = 0;
+		num = next_prime(num);
+		
+		uint8_t temp = three_least_significant(num);
+		
+		char buffer[10];
+		int_to_str(temp,buffer);
+		write_string(buffer,0);
+		
 		
     }
 }
