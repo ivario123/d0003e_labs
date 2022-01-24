@@ -13,6 +13,7 @@ int write_char(char ch,int pos){
 	
 	// The address of the first segment of the display
 	LCDDR0 = A_LSB;
+	LCDDR1 = A_MSB;
 	
 	return success;
 	
@@ -86,35 +87,7 @@ int init_lcd(){
 
 
 
-int revese(char* str){
-	char * eos = str;
-	while(*eos!='\0')
-		eos++;
-	eos--;
-	while(eos>=str){
-		char temp = *eos;
-		*eos = *str;
-		*str = temp;
-		eos--;
-		str++;
-	}
-	return success;
-}
-int three_least_significant(long num){
-	return (num-(num/1000)*1000);
-}
-int int_to_str(uint8_t num,char* buffer){
-	char * start = buffer;
-	while (num)
-	{
-		*buffer = (volatile char) num-(num/10)*10+48;
-		num/=10;
-		buffer++;
-	}
-	*buffer = '\0';
-	revese(start);
-	return success;
-}
+
 int is_prime(long num){
 	
 	// base cases 0-3
@@ -135,7 +108,7 @@ int is_prime(long num){
 }
 
 int primes(){
-	long num = 100;
+	long num = 1;
 	while(1)
 	{
 		if(num >= 3){
@@ -144,6 +117,8 @@ int primes(){
 			else
 				num +=2;	
 		}
+		else 
+			num++;
 		if(is_prime(num)==1){
 			uint8_t temp = three_least_significant(num);
 		

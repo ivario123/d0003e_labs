@@ -13,6 +13,7 @@
 #define MIN_POS 0
 #define MAX_POS 5
 #include "dictionary.h"
+#include "string.h"
 #include <stdint-gcc.h>
 #include <avr/io.h>
 enum ERROR{
