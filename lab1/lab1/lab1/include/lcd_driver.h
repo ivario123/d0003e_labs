@@ -10,8 +10,8 @@
 #define LCD_DRIVER_H_
 
 
-#define MAX_POS 0
-#define MIN_POS 5
+#define MIN_POS 0
+#define MAX_POS 5
 #include "dictionary.h"
 #include <stdint-gcc.h>
 #include <avr/io.h>

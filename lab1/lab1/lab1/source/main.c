@@ -49,7 +49,8 @@ int main(void)
 		while(1);	// Blink onboard LED or something indicating error
 	//write_char('a',1);
 	//blink();
-	button();
+	//button();
+	primes();
     while(1) 
     {
 		

@@ -13,12 +13,21 @@ int write_char(char ch,int pos){
 	
 	// The address of the first segment of the display
 	LCDDR0 = A_LSB;
-	// The numbers 0-9, credit wikipedia might be wrong
+	
 	return success;
 	
 	
 }
-
+int write_string(char* ch, int first_pos){
+	first_pos = first_pos%MAX_POS;
+	while(*ch != '\0'){
+		write_char(*ch,first_pos);
+		first_pos++;
+		first_pos = first_pos%MAX_POS;
+		ch++;
+	}
+	return success;
+}
 /************************************************************************/
 /* This function could be shortend significantly,       */
 /* I do however feel that this is its most readable form*/
@@ -77,11 +86,25 @@ int init_lcd(){
 
 
 
-
+int revese(char* str){
+	char * eos = str;
+	while(*eos!='\0')
+		eos++;
+	eos--;
+	while(eos>=str){
+		char temp = *eos;
+		*eos = *str;
+		*str = temp;
+		eos--;
+		str++;
+	}
+	return success;
+}
 int three_least_significant(long num){
-	return (volatile int)num-(num/100)*100;
+	return (num-(num/1000)*1000);
 }
 int int_to_str(uint8_t num,char* buffer){
+	char * start = buffer;
 	while (num)
 	{
 		*buffer = (volatile char) num-(num/10)*10+48;
@@ -89,31 +112,46 @@ int int_to_str(uint8_t num,char* buffer){
 		buffer++;
 	}
 	*buffer = '\0';
+	revese(start);
 	return success;
 }
 int is_prime(long num){
-	// basecases 0-3
+	
+	// base cases 0-3
 	if (num <= 3)
 		return 1;
-	// basecase num is eaven
+	// base case num is even
 	if(num%2 == 0)
 		return 0;
 	// Start on 3
-	int counter = 3;
+	uint8_t counter = 3;
 	// Only check odd numbers up to half of num
 	while(counter <num/2){
 		if(num%counter == 0)
-			return 1;
+			return 0;
 		counter+=2;
 	}
-	return 0;
+	return 1;
 }
 
 int primes(){
+	long num = 100;
 	while(1)
 	{
-		// Get next prime
-		// Convert to string
+		if(num >= 3){
+			if (num%2 == 0)
+				num++;
+			else
+				num +=2;	
+		}
+		if(is_prime(num)==1){
+			uint8_t temp = three_least_significant(num);
+		
+		
+			char buffer[10];
+			int_to_str(temp,buffer);
+			write_string(buffer,0);
+		}
 		// Print string to screen
 	}
 	return 0;
