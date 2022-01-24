@@ -16,12 +16,12 @@ int revese(char* str){
 		eos--;
 		str++;
 	}
-	return success;
+	return 0;
 }
 int three_least_significant(long num){
 	return (num-(num/1000)*1000);
 }
-int int_to_str(uint8_t num,char* buffer){
+int int_to_str(int num,char* buffer){
 	char * start = buffer;
 	while (num)
 	{
@@ -31,5 +31,5 @@ int int_to_str(uint8_t num,char* buffer){
 	}
 	*buffer = '\0';
 	revese(start);
-	return success;
+	return 0;
 }

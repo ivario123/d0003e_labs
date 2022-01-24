@@ -37,10 +37,8 @@ int init_lcd ();
 **/
 int write_char(char ch,int pos);
 
-
+int write_string(char* ch, int first_pos);
 int three_least_significant(long num);
-
-int int_to_str(uint8_t num,char* buffer);
 
 int is_prime(long num);
 

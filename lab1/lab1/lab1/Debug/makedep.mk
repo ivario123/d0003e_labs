@@ -6,3 +6,5 @@ source\lcd_driver.c
 
 source\main.c
 
+source\string.c
+

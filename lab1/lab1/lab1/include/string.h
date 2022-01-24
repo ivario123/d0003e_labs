@@ -14,7 +14,7 @@
 
 int revese(char* str);
 int three_least_significant(long num);
-int int_to_str(uint8_t num,char* buffer);
+int int_to_str(int num,char* buffer);
 
 
 #endif /* STRING_H_ */

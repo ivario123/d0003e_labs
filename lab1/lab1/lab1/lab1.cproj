@@ -166,10 +166,16 @@
     <Compile Include="include\lcd_driver.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="include\string.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="source\lcd_driver.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="source\main.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="source\string.c">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
