@@ -18,10 +18,15 @@ int revese(char* str){
 	}
 	return 0;
 }
-int three_least_significant(long num){
-	return (num-(num/1000)*1000);
+int six_least_significant(long num){
+	return (num-(num/1000000)*1000000);
 }
 int int_to_str(int num,char* buffer){
+	if (num == 0){
+		*buffer = 48;
+		*(++buffer) = '\0';
+		return 0;
+	}
 	char * start = buffer;
 	while (num)
 	{

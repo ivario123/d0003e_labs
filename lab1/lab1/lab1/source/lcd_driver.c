@@ -23,10 +23,20 @@ long dict_arr[] = {
 int write_char(char ch,int pos){
 	
 	// The address of the first segment of the display
+	
+	
+	
+	
 	LCDDR0 = dict_arr[0];
 	
 	return success;
 	
+	
+}
+int write_long(long num){
+	char buffer[7];
+	num = six_least_significant(num);
+	int_to_str(num,buffer);
 	
 }
 int write_string(char* ch, int first_pos){
@@ -143,7 +153,6 @@ int primes(){
 }
 
 int toggle_led(){
-	// Negate bit 1 in the LCDR0
 	if((LCDDR0^2)== 0)
 		LCDDR0=0;
 	else

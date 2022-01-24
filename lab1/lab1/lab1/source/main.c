@@ -49,21 +49,51 @@ long next_prime(long num){
 	}
 }
 
+int button(){
+	uint8_t prev_value = 1;
+	int state = 0;
+	while(1){
+		while(prev_value != (PINB&(1<<7))>>7);
+		while(prev_value == (PINB&(1<<7))>>7);
+		state=!state;
+		
+		if((LCDDR1^2)== 0){
+			LCDDR1 = 0;
+			LCDDR2 = 2;
+		}
+		else{
+			LCDDR1 = 2;
+			LCDDR2 = 0;
+		}
+		
+	}
 
-int check_interrupts(uint16_t freq,uint16_t last_time){
+}
+int check_interrupts(uint16_t freq,uint16_t last_time,uint8_t *buttonstate){
 	// Checking timer int
 	uint16_t time = (uint16_t)TCNT1;
-	if(time >= last_time+freq)
+	volatile uint16_t max = ~0;
+	// grabs wrap around condition too
+	if(time >= last_time+freq ^ (max-last_time+time > freq&& last_time!=0))
 	{
 		volatile last_time = time;
-		blink();
+		toggle_led();
 	}
 	
 	// check if button state has changed
-	if(1!=(PINB&(1<<7))>>7)
+	if((*buttonstate!=(uint8_t)PINB)^(1!=(PINB&(1<<7))>>7))
 	{
 		volatile int i = 0;
+		if((LCDDR1^2)== 0){
+			LCDDR1 = 0;
+			LCDDR2 = 2;
+		}
+		else{
+			LCDDR1 = 2;
+			LCDDR2 = 0;
+		}
 		// Do button interrupt things
+		*buttonstate= (uint8_t)PINB;
 	}
 	
 		
@@ -78,26 +108,27 @@ int main(void)
 		while(1);	// Blink on board LED or something indicating error
 	//write_char('a',1);
 	//blink();
-	//button();
+	button();
 	//primes();
 	
 	
 	uint16_t freq = 31250/2;		// The segment should turn on and of every half cycle i.e flicker with 2 Hz frequency
 	uint16_t last_time = TCNT1;
+	uint8_t buttonstate = 1;
 	long num = 0;
     while(1) 
     {	
 		// Calculate the next prime
-		long new_num = next_prime(num);
+		long new_num = 0;//next_prime(num);
 		// Check if any interrupts have been triggered
-		last_time = check_interrupts(31250/2,last_time);
+		last_time = check_interrupts(31250/2,last_time,&buttonstate);
 		// Do the other stuff
 		if(new_num!=num){
-		uint8_t temp = three_least_significant(num);
-		char buffer[10];
-		int_to_str(temp,buffer);
-		write_string(buffer,0);
-		last_time = check_interrupts(31250/2,last_time);
+			uint8_t temp = six_least_significant(num);
+			char buffer[4];
+			int_to_str(temp,buffer);
+			write_string(buffer,0);
+			last_time = check_interrupts(freq,last_time,&buttonstate);
 		}
 		num = new_num;
 		
