@@ -22,7 +22,7 @@ int init(void){
 	CLKPR = 0X00;
 	
 	
-	// Setting the presacling factor to 256
+	// Setting the pre-sacling factor to 256
 	TCCR1B = TCCR1B|TIMER_SCALING_256;
 	
 	// Setting the pull up
@@ -40,8 +40,9 @@ long next_prime(long num){
 			else
 			num +=2;
 		}
-		else
-		num++;
+		else{
+			num++;
+		}
 		if(is_prime(num)==1){
 			return num;
 		}
@@ -50,14 +51,13 @@ long next_prime(long num){
 }
 
 int button(){
-	uint8_t prev_value = 1;
-	int state = 0;
 	while(1){
-		while(prev_value != (PINB&(1<<7))>>7);
-		while(prev_value == (PINB&(1<<7))>>7);
-		state=!state;
+		// wait loop, first wait for button to be pressed then wait for it to be released thus generating 1 action per action
+		while(1 != (PINB&(1<<7))>>7);
+		while(!(PINB&(1<<7))>>7);
 		
-		if((LCDDR1^2)== 0){
+		// Swap states
+		if(((LCDDR1&2)^2)== 0){
 			LCDDR1 = 0;
 			LCDDR2 = 2;
 		}
@@ -69,71 +69,93 @@ int button(){
 	}
 
 }
-int check_interrupts(uint16_t freq,uint16_t last_time,uint8_t *buttonstate){
-	// Checking timer int
+int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstate){
+	
+	
+	
+	// Checking the timer interrupt
 	uint16_t time = (uint16_t)TCNT1;
-	volatile uint16_t max = ~0;
-	// grabs wrap around condition too
-	if(time >= last_time+freq ^ (max-last_time+time > freq&& last_time!=0))
+	
+	
+	if(target_time < time && !((prev_time>target_time&& time>prev_time)||time < target_time))
 	{
-		volatile last_time = time;
+		// Felet uppstår när tiden ligger mellan gamla tiden och max men mål tid har wrappat runt
+		
+		target_time=time;
 		toggle_led();
 	}
-	
 	// check if button state has changed
-	if((*buttonstate!=(uint8_t)PINB)^(1!=(PINB&(1<<7))>>7))
+	if((1!=(PINB&(1<<7))>>7))
 	{
 		volatile int i = 0;
-		if((LCDDR1^2)== 0){
-			LCDDR1 = 0;
-			LCDDR2 = 2;
+		if(*buttonstate==0){
+			*buttonstate=1;
 		}
-		else{
-			LCDDR1 = 2;
-			LCDDR2 = 0;
+		if(*buttonstate == 2){
+			if((LCDDR1^2)== 0){
+				LCDDR1 = 0;
+				LCDDR2 = 2;
+			}
+			else{
+				LCDDR1 = 2;
+				LCDDR2 = 0;
+			}
+			*buttonstate = 0;
 		}
 		// Do button interrupt things
-		*buttonstate= (uint8_t)PINB;
 	}
-	
+	else if(*buttonstate == 1){
+		*buttonstate =2 ;
+	}
+	// Return target time
+	return target_time;
 		
 }
 
 
-int main(void)
-{
-	if(success != init())
-		while(1);	// Blink on board LED or something indicating error
-	if(success != init_lcd())
-		while(1);	// Blink on board LED or something indicating error
-	//write_char('a',1);
-	//blink();
-	button();
-	//primes();
-	
-	
-	uint16_t freq = 31250/2;		// The segment should turn on and of every half cycle i.e flicker with 2 Hz frequency
-	uint16_t last_time = TCNT1;
-	uint8_t buttonstate = 1;
+void task_4(void){
+	uint16_t freq = 31250/2;									// The segment should turn on and of every half cycle i.e flicker with 2 Hz frequency
+	volatile uint16_t target_time = TCNT1+freq;					// Target time, will wrap around just like the timer
+	volatile uint16_t last_time = target_time-freq;				// Last time the timer triggerd, useful to look for overflows
+	uint8_t buttonstate = 0;									// Tracks button actions, event triggers on 3
 	long num = 0;
     while(1) 
     {	
 		// Calculate the next prime
-		long new_num = 0;//next_prime(num);
+		long new_num = next_prime(num);
 		// Check if any interrupts have been triggered
-		last_time = check_interrupts(31250/2,last_time,&buttonstate);
+		if(target_time != check_interrupts(target_time,last_time,&buttonstate)){
+			
+			// uints wrap around in the same way as the timer reg
+			last_time = target_time;
+			target_time+=freq;
+		}
 		// Do the other stuff
 		if(new_num!=num){
-			uint8_t temp = six_least_significant(num);
-			char buffer[4];
+			uint8_t temp = six_least_significant(new_num);
+			char buffer[6];
 			int_to_str(temp,buffer);
 			write_string(buffer,0);
-			last_time = check_interrupts(freq,last_time,&buttonstate);
 		}
 		num = new_num;
-		
-		
-		
     }
+}
+
+int main(void)
+{
+	if(success != init())
+		blink();
+	if(success != init_lcd())
+		blink();
+	//write_char('0',0);
+	write_char('0',1);
+	//write_char('3',2);
+	//blink();
+	//button();
+	//primes();
+	task_4();
+	
+	while(1){
+		}
 }
 

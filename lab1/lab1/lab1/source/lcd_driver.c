@@ -5,6 +5,8 @@
  *  Author: ivarj
  */ 
 
+// Notes
+// 0x78 seems to controll lower segment of segment 5
 #include "../include/lcd_driver.h"
 #define CLOCK_SPEED 8000000  				// The clock speed in Hz
 #define REFRESH_RATE 31250					// A second measured in bits of the timer register
@@ -21,14 +23,62 @@ long dict_arr[] = {
 	0x1B51
 };
 int write_char(char ch,int pos){
+	if(pos < 0 || pos > 5)
+		return;
+	// Predefine num
+	uint16_t num = 0x0;
+	uint8_t *first_address = 0xEC;
+	uint8_t *address = first_address+(pos>>1);
+	// Clear the segment
+	for( int i= 0; i < 4; i++){
+		// Always grab the lowest 4 bits of the char as nibble 
+		uint8_t nibble = num&0xf;
+		num>>=4;	
+		
+		
+		if(pos%2==0)
+		{
+			*address = ((*address>>4)<<4);
+			*address = (*address)|nibble;
+			// Write the data to the lower bits
+		}
+		else
+		{
+			*address = (*address<<4)>>4;
+			*address =  *address | nibble << 4;
+			// Write the data to the higher bits
+		}
+		address+=5;
+		
+	}
+	address = first_address+(pos>>1);
+	// Set num to a value if exists in array
+	if(ch>=48&& ch<=57){
+		num = dict_arr[ch-48];
+	}
 	
-	// The address of the first segment of the display
 	
-	
-	
-	
-	LCDDR0 = dict_arr[0];
-	
+	for( int i= 0; i < 4; i++){
+		// Always grab the lowest 4 bits of the char as nibble 
+		uint8_t nibble = num&0xf;
+		num>>=4;	
+		
+		
+		if(pos%2==0)
+		{
+			*address = ((*address>>4)<<4);
+			*address = (*address)|nibble;
+			// Write the data to the lower bits
+		}
+		else
+		{
+			*address = (*address<<4)>>4;
+			*address =  *address | nibble << 4;
+			// Write the data to the higher bits
+		}
+		address+=5;
+		
+	}
 	return success;
 	
 	
@@ -153,18 +203,18 @@ int primes(){
 }
 
 int toggle_led(){
-	if((LCDDR0^2)== 0)
-		LCDDR0=0;
+	if((LCDDR0&2)>>1== 0)
+		LCDDR0 = LCDDR0|2;
 	else
-		LCDDR0=2;
+		LCDDR0= LCDDR0^2;
 	return 0;
 }
 int blink(){
-	uint16_t freq = 31250/2;		// The segment should turn on and of every half cycle i.e flicker with 2 Hz frequenzy
+	uint16_t freq = 31250/2;		// The segment should turn on and of every half cycle i.e flicker with 2 Hz frequency
 	uint16_t last_time = TCNT1;
 	// uint16t's wrap around in the same way for timer and normal addition
 	while(1){
-		while(((uint16_t)TCNT1)< last_time+freq);
+		while(((uint16_t)TCNT1)!= last_time+freq);
 		last_time =(uint16_t)TCNT1;
 		toggle_led();
 	}
