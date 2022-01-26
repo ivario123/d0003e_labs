@@ -68,6 +68,16 @@ int button(){
 	}
 
 }
+void toggle_button_2(){
+	if((LCDDR13&1)== 1){
+		LCDDR13 = LCDDR13^1;
+		LCDDR18 = LCDDR18|1;
+	}
+	else{
+		LCDDR13 = LCDDR13|1;
+		LCDDR18 = LCDDR18^1;
+	}
+}
 int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstate){
 	
 	
@@ -85,19 +95,12 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
 	// check if button state has changed
 	if((1!=(PINB&(1<<7))>>7))
 	{
-		volatile int i = 0;
 		if(*buttonstate==0){
 			*buttonstate=1;
 		}
+		
 		if(*buttonstate == 2){
-			if((LCDDR13&1)== 1){
-				LCDDR13 = LCDDR13^1;
-				LCDDR18 = LCDDR18|1;
-			}
-			else{
-				LCDDR13 = LCDDR13|1;
-				LCDDR13 = LCDDR13^1;
-			}
+			toggle_button_2();
 			*buttonstate = 0;
 		}
 	}
