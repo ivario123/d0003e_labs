@@ -78,7 +78,6 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
 	
 	if(target_time < time && !((prev_time>target_time&& time>prev_time)||time < target_time))
 	{
-		// Felet uppstår när tiden ligger mellan gamla tiden och max men mål tid har wrappat runt
 		
 		target_time=time;
 		toggle_led();
@@ -122,7 +121,7 @@ void task_4(void){
     while(1) 
     {	
 		// Calculate the next prime
-		long new_num = 0;//next_prime(num);
+		long new_num = next_prime(num);
 		// Check if any interrupts have been triggered
 		if(target_time != check_interrupts(target_time,last_time,&buttonstate)){
 			
@@ -132,10 +131,7 @@ void task_4(void){
 		}
 		// Do the other stuff
 		if(new_num!=num){
-			uint8_t temp = six_least_significant(new_num);
-			char buffer[6];
-			int_to_str(temp,buffer);
-			write_string(buffer,0);
+			writeLong(num);
 		}
 		num = new_num;
     }
@@ -150,12 +146,14 @@ int main(void)
 	//write_char('1',0);
 	//write_char('4',1);
 	//write_char('0',1);
+	//write_char('3',8);
+	//write_char('a',1);
 	//write_char('1',2);
 	
 	//blink();
 	//button();
-	primes();
-	//task_4();
+	//primes();
+	task_4();
 	
 	while(1){
 		}

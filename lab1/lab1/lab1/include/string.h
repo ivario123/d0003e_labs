@@ -13,7 +13,7 @@
 
 
 int revese(char* str);
-int six_least_significant(long num);
+void six_least_significant(long num,int * ret);
 int int_to_str(int num,char* buffer);
 
 

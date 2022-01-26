@@ -24,34 +24,12 @@ long dict_arr[] = {
 };
 int write_char(char ch,int pos){
 	if(pos < 0 || pos > 5)
-		return;
+		return 0;
 	// Predefine num
 	uint16_t num = 0x0;
 	uint8_t *first_address = 0xEC;
-	uint8_t *address = first_address+(pos>>1);
+	volatile uint8_t *address = first_address+(pos>>1);
 	// Clear the segment
-	for( int i= 0; i < 4; i++){
-		// Always grab the lowest 4 bits of the char as nibble 
-		uint8_t nibble = num&0xf;
-		num>>=4;	
-		
-		
-		if(pos%2==0)
-		{
-			*address = ((*address>>4)<<4);
-			*address = (*address)|nibble;
-			// Write the data to the lower bits
-		}
-		else
-		{
-			*address = (*address<<4)>>4;
-			*address =  *address | nibble << 4;
-			// Write the data to the higher bits
-		}
-		address+=5;
-		
-	}
-	address = first_address+(pos>>1);
 	// Set num to a value if exists in array
 	if(ch>=48&& ch<=57){
 		num = dict_arr[ch-48];
@@ -66,13 +44,13 @@ int write_char(char ch,int pos){
 		
 		if(pos%2==0)
 		{
-			*address = ((*address>>4)<<4);
+			*address = (*address)&0xf0;
 			*address = (*address)|nibble;
 			// Write the data to the lower bits
 		}
 		else
 		{
-			*address = (*address<<4)>>4;
+			*address = (*address)&0x0f;
 			*address =  *address | nibble << 4;
 			// Write the data to the higher bits
 		}
@@ -81,12 +59,6 @@ int write_char(char ch,int pos){
 	}
 	return success;
 	
-	
-}
-int write_long(long num){
-	char buffer[7];
-	num = six_least_significant(num);
-	int_to_str(num,buffer);
 	
 }
 int write_string(char* ch, int first_pos){
@@ -155,7 +127,13 @@ int init_lcd(){
 }
 
 
-
+void writeLong(long num){
+	int temp;
+	six_least_significant(num,&temp);
+	char buffer[10];
+	int_to_str(temp,buffer);
+	write_string(buffer,0);
+}
 
 
 int is_prime(long num){
@@ -167,18 +145,18 @@ int is_prime(long num){
 	if(num%2 == 0)
 		return 0;
 	// Start on 3
-	uint8_t counter = 3;
-	// Only check odd numbers up to half of num
+	long counter = 3;
+	// Only check numbers up to half of num
 	while(counter <num/2){
 		if(num%counter == 0)
 			return 0;
-		counter+=2;
+		counter++;
 	}
 	return 1;
 }
 
 int primes(){
-	long num = 1;
+	long num = 500;
 	while(1)
 	{
 		if(num >= 3){
@@ -190,12 +168,7 @@ int primes(){
 		else 
 			num++;
 		if(is_prime(num)==1){
-			uint8_t temp = six_least_significant(num);
-		
-		
-			char buffer[10];
-			int_to_str(temp,buffer);
-			write_string(buffer,0);
+			writeLong(num);
 		}
 		// Print string to screen
 	}

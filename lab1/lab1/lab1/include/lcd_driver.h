@@ -44,4 +44,5 @@ int is_prime(long num);
 
 int primes();
 int toggle_led();
+void writeLong(long num);
 #endif /* LCD_DRIVER_H_ */
