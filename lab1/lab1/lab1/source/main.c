@@ -80,7 +80,7 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
 	{
 		
 		target_time=time;
-		toggle_led();
+		toggle_led_2();
 	}
 	// check if button state has changed
 	if((1!=(PINB&(1<<7))>>7))
@@ -90,17 +90,16 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
 			*buttonstate=1;
 		}
 		if(*buttonstate == 2){
-			if((LCDDR1^2)== 0){
-				LCDDR1 = LCDDR1^2;
-				LCDDR2 = LCDDR2|2;
+			if((LCDDR13&1)== 1){
+				LCDDR13 = LCDDR13^1;
+				LCDDR18 = LCDDR18|1;
 			}
 			else{
-				LCDDR1 = LCDDR1|2;
-				LCDDR2 = LCDDR2^2;
+				LCDDR13 = LCDDR13|1;
+				LCDDR13 = LCDDR13^1;
 			}
 			*buttonstate = 0;
 		}
-		// Do button interrupt things
 	}
 	else if(*buttonstate == 1){
 		*buttonstate =2 ;
@@ -112,12 +111,12 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
 
 
 void task_4(void){
-	LCDDR1 = LCDDR1|2;
+	LCDDR13 = LCDDR13|1;
 	uint16_t freq = 31250/2;									// The segment should turn on and of every half cycle i.e flicker with 2 Hz frequency
 	volatile uint16_t target_time = TCNT1+freq;					// Target time, will wrap around just like the timer
 	volatile uint16_t last_time = target_time-freq;				// Last time the timer triggerd, useful to look for overflows
-	uint8_t buttonstate = 0;									// Tracks button actions, event triggers on 3
-	long num = 0;
+	uint8_t buttonstate = 1;									// Tracks button actions, event triggers on 3
+	long num = 25;
     while(1) 
     {	
 		// Calculate the next prime
@@ -131,7 +130,7 @@ void task_4(void){
 		}
 		// Do the other stuff
 		if(new_num!=num){
-			writeLong(num);
+			writeLong_2(num);
 		}
 		num = new_num;
     }
@@ -143,6 +142,10 @@ int main(void)
 		blink();
 	if(success != init_lcd())
 		blink();
+	//LCDDR3++;
+	//LCDDR8++;
+	//LCDDR13=1;
+	//LCDDR18=1;
 	//write_char('1',0);
 	//write_char('4',1);
 	//write_char('0',1);
