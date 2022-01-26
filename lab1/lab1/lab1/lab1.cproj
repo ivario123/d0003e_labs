@@ -160,9 +160,6 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="include\dictionary.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="include\lcd_driver.h">
       <SubType>compile</SubType>
     </Compile>

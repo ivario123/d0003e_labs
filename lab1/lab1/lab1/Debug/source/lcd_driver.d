@@ -1,6 +1,5 @@
 source/lcd_driver.d source/lcd_driver.o: ../source/lcd_driver.c \
- ../source/../include/lcd_driver.h ../source/../include/dictionary.h \
- ../source/../include/string.h \
+ ../source/../include/lcd_driver.h ../source/../include/string.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdint-gcc.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\sfr_defs.h \
@@ -15,8 +14,6 @@ source/lcd_driver.d source/lcd_driver.o: ../source/lcd_driver.c \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h
 
 ../source/../include/lcd_driver.h:
-
-../source/../include/dictionary.h:
 
 ../source/../include/string.h:
 

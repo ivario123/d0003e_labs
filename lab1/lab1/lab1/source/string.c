@@ -19,10 +19,7 @@ int revese(char* str){
 	return 0;
 }
 void six_least_significant(long num,int *ret){
-	volatile long temp = (num/1000000);
-	temp *=1000000;
-	temp = num-temp;
-	*ret = (int)temp;
+	*ret = (int)(num-(num/1000000)*1000000);
 }
 int int_to_str(int num,char* buffer){
 	if (num == 0){

@@ -12,7 +12,6 @@
 
 #define MIN_POS 0
 #define MAX_POS 5
-#include "dictionary.h"
 #include "string.h"
 #include <stdint-gcc.h>
 #include <avr/io.h>
@@ -21,6 +20,7 @@ enum ERROR{
 	startup = 1,
 	writechar = 1
 	};
+
 
 
 /**
@@ -37,12 +37,42 @@ int init_lcd ();
 **/
 int write_char(char ch,int pos);
 
+/**
+* Writes a whole string to the screen, if it's longer than 6 elements then it will wrap around
+* @param char* ch the string that is to be written to screen
+* @param first_pos the on which segment the string should be started 
+* @return 0 if success
+**/
 int write_string(char* ch, int first_pos);
-int three_least_significant(long num);
 
+/**
+* Checks if a number is a prime number
+* @param num the number the user wants to check
+* @return 1 if it is, 0 if not
+**/
 int is_prime(long num);
 
-int primes();
+/**
+* Loops for ever while generating new prime numbers
+*/
+void primes();
+/**
+* Toggles a segment on the display
+**/
 int toggle_led();
+/**
+* Writes a long to the lcd display
+* @param num the number to be displayed
+**/
 void writeLong(long num);
+
+
+/************************************************************************/
+/*					Modified functions for part 4						*/
+/************************************************************************/
+int toggle_led_2();
+int blink_2();
+int write_char_2(char ch, int pos);
+int write_string_2(char * ch, int first_pos);
+void writeLong_2(long num);
 #endif /* LCD_DRIVER_H_ */

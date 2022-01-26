@@ -10,6 +10,7 @@
 #include "../include/lcd_driver.h"
 #define CLOCK_SPEED 8000000  				// The clock speed in Hz
 #define REFRESH_RATE 31250					// A second measured in bits of the timer register
+
 long dict_arr[] = {
 	0x1551,
 	0x0110,
@@ -24,100 +25,12 @@ long dict_arr[] = {
 };
 
 
-int toggle_led_2(){
-	if((LCDDR8&1)== 0)
-		LCDDR8 = LCDDR8|1;
-	else
-		LCDDR8= LCDDR8^1;
-	return 0;
-}
-
-
-int blink_2(){
-	
-	if((LCDDR8&1)== 0)
-		LCDDR8 = LCDDR8|2;
-	else
-		LCDDR8= LCDDR8^2;
-	return 0;
-}
-
-int write_char_2(char ch, int pos){
-	if(pos < 0 || pos > 5)
-		return 0;
-	// Predefine num
-	uint16_t num = 0x0;
-	uint8_t *first_address = 0xEC;
-	volatile uint8_t *address = first_address+(pos>>1);
-	// Clear the segment
-	// Set num to a value if exists in array
-	if(ch>=48&& ch<=57){
-		num = dict_arr[ch-48];
-	}
-	
-	
-	for( int i= 0; i < 4; i++){
-		// Always grab the lowest 4 bits of the char as nibble 
-		uint8_t nibble = num&0xf;
-		num>>=4;	
-		
-		
-		if(pos%2==0)
-		{
-			*address = (*address)&(0xf0);
-			*address = (*address)|nibble;
-			// Write the data to the lower bits
-		}
-		else
-		{
-			*address = (*address)&(0x0f);
-			*address =  *address | (nibble << 4);
-			// Write the data to the higher bits
-		}
-		address+=5;
-		
-	}
-	return success;
-}
-
-
-
-int write_string_2(char * ch, int first_pos){
-	first_pos = first_pos%MAX_POS;
-	while(*ch != '\0'){
-		write_char_2(*ch,first_pos);
-		first_pos++;
-		first_pos = first_pos%MAX_POS;
-		ch++;
-	}
-	return success;
-}
-
-
-
-
-void writeLong_2(long num){
-	int temp;
-	six_least_significant(num,&temp);
-	char buffer[10];
-	int_to_str(temp,buffer);
-	write_string_2(buffer,0);
-}
-
-
-
-
-
-
-
-
-
 int write_char(char ch,int pos){
 	if(pos < 0 || pos > 5)
 		return 0;
 	// Predefine num
 	uint16_t num = 0x0;
-	uint8_t *first_address = 0xEC;
+	uint8_t *first_address = (uint8_t *)0xEC;
 	volatile uint8_t *address = first_address+(pos>>1);
 	// Clear the segment
 	// Set num to a value if exists in array
@@ -245,8 +158,9 @@ int is_prime(long num){
 	return 1;
 }
 
-int primes(){
-	long num = 500;
+void primes(){
+	// Simply generates primes
+	long num = 0;
 	while(1)
 	{
 		if(num >= 3){
@@ -262,18 +176,19 @@ int primes(){
 		}
 		// Print string to screen
 	}
-	return 0;
 }
 
 int toggle_led(){
+	// If the segment is on turn it of
 	if((LCDDR0&2)>>1== 0)
 		LCDDR0 = LCDDR0|2;
+	// Else turn it on
 	else
 		LCDDR0= LCDDR0^2;
 	return 0;
 }
 int blink(){
-	uint16_t freq = 31250/2;		// The segment should turn on and of every half cycle i.e flicker with 2 Hz frequency
+	uint16_t freq = 31250/2;		// The segment should turn on and of every half cycle i.e. flicker with 2 Hz frequency
 	uint16_t last_time = TCNT1;
 	// uint16t's wrap around in the same way for timer and normal addition
 	while(1){
@@ -283,4 +198,103 @@ int blink(){
 	}
 	return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+int toggle_led_2(){
+	if((LCDDR8&1)== 0)
+	LCDDR8 = LCDDR8|1;
+	else
+	LCDDR8= LCDDR8^1;
+	return 0;
+}
+
+
+int blink_2(){
+	
+	if((LCDDR8&1)== 0)
+	LCDDR8 = LCDDR8|2;
+	else
+	LCDDR8= LCDDR8^2;
+	return 0;
+}
+
+int write_char_2(char ch, int pos){
+	if(pos < 0 || pos > 5)
+	return 0;
+	// Predefine num
+	uint16_t num = 0x0;
+	uint8_t *first_address = (uint8_t *)0xEC;
+	volatile uint8_t *address = first_address+(pos>>1);
+	// Clear the segment
+	// Set num to a value if exists in array
+	if(ch>=48&& ch<=57){
+		num = dict_arr[ch-48];
+	}
+	
+	
+	for( int i= 0; i < 4; i++){
+		// Always grab the lowest 4 bits of the char as nibble
+		uint8_t nibble = num&0xf;
+		num>>=4;
+		
+		
+		if(pos%2==0)
+		{
+			*address = (*address)&(0xf0);
+			*address = (*address)|nibble;
+			// Write the data to the lower bits
+		}
+		else
+		{
+			*address = (*address)&(0x0f);
+			*address =  *address | (nibble << 4);
+			// Write the data to the higher bits
+		}
+		address+=5;
+		
+	}
+	return success;
+}
+
+
+
+int write_string_2(char * ch, int first_pos){
+	first_pos = first_pos%MAX_POS;
+	while(*ch != '\0'){
+		write_char_2(*ch,first_pos);
+		first_pos++;
+		first_pos = first_pos%MAX_POS;
+		ch++;
+	}
+	return success;
+}
+
+
+
+
+void writeLong_2(long num){
+	int temp;
+	six_least_significant(num,&temp);
+	char buffer[10];
+	int_to_str(temp,buffer);
+	write_string_2(buffer,0);
+}
+
+
+
 

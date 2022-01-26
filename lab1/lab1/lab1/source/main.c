@@ -141,14 +141,8 @@ void task_4(void){
 
 int main(void)
 {
-	if(success != init())
-		blink();
-	if(success != init_lcd())
-		blink();
-	//LCDDR3++;
-	//LCDDR8++;
-	//LCDDR13=1;
-	//LCDDR18=1;
+	init();
+	init_lcd();
 	//write_char('1',0);
 	//write_char('4',1);
 	//write_char('0',1);
