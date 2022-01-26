@@ -190,7 +190,7 @@ int primes(){
 		else 
 			num++;
 		if(is_prime(num)==1){
-			uint8_t temp = three_least_significant(num);
+			uint8_t temp = six_least_significant(num);
 		
 		
 			char buffer[10];

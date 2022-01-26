@@ -51,21 +51,20 @@ long next_prime(long num){
 }
 
 int button(){
+	uint8_t prev_value = 0;
+	LCDDR1 = LCDDR1|2;
 	while(1){
-		// wait loop, first wait for button to be pressed then wait for it to be released thus generating 1 action per action
-		while(1 != (PINB&(1<<7))>>7);
-		while(!(PINB&(1<<7))>>7);
-		
+		while(prev_value!=(PINB&(1<<7))>>7);
+		while(prev_value == (PINB&(1<<7))>>7);
 		// Swap states
 		if(((LCDDR1&2)^2)== 0){
-			LCDDR1 = 0;
-			LCDDR2 = 2;
+			LCDDR1 = LCDDR1^2;
+			LCDDR2 = LCDDR2|2;
 		}
 		else{
-			LCDDR1 = 2;
-			LCDDR2 = 0;
+			LCDDR1 = LCDDR1|2;
+			LCDDR2 = LCDDR2^2;
 		}
-		
 	}
 
 }
@@ -93,12 +92,12 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
 		}
 		if(*buttonstate == 2){
 			if((LCDDR1^2)== 0){
-				LCDDR1 = 0;
-				LCDDR2 = 2;
+				LCDDR1 = LCDDR1^2;
+				LCDDR2 = LCDDR2|2;
 			}
 			else{
-				LCDDR1 = 2;
-				LCDDR2 = 0;
+				LCDDR1 = LCDDR1|2;
+				LCDDR2 = LCDDR2^2;
 			}
 			*buttonstate = 0;
 		}
@@ -114,6 +113,7 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
 
 
 void task_4(void){
+	LCDDR1 = LCDDR1|2;
 	uint16_t freq = 31250/2;									// The segment should turn on and of every half cycle i.e flicker with 2 Hz frequency
 	volatile uint16_t target_time = TCNT1+freq;					// Target time, will wrap around just like the timer
 	volatile uint16_t last_time = target_time-freq;				// Last time the timer triggerd, useful to look for overflows
@@ -122,7 +122,7 @@ void task_4(void){
     while(1) 
     {	
 		// Calculate the next prime
-		long new_num = next_prime(num);
+		long new_num = 0;//next_prime(num);
 		// Check if any interrupts have been triggered
 		if(target_time != check_interrupts(target_time,last_time,&buttonstate)){
 			
@@ -147,13 +147,15 @@ int main(void)
 		blink();
 	if(success != init_lcd())
 		blink();
-	//write_char('0',0);
-	write_char('0',1);
-	//write_char('3',2);
+	//write_char('1',0);
+	//write_char('4',1);
+	//write_char('0',1);
+	//write_char('1',2);
+	
 	//blink();
 	//button();
-	//primes();
-	task_4();
+	primes();
+	//task_4();
 	
 	while(1){
 		}
