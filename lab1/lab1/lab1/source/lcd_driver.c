@@ -169,14 +169,13 @@ void primes(){
 	}
 }
 
-int toggle_led(){
+void toggle_led(){
 	// If the segment is on turn it of
 	if((LCDDR0&2)>>1== 0)
 		LCDDR0 = LCDDR0|2;
 	// Else turn it on
 	else
 		LCDDR0= LCDDR0^2;
-	return 0;
 }
 int blink(){
 	uint16_t freq = 31250/2;		// The segment should turn on and of every half cycle i.e. flicker with 2 Hz frequency
@@ -206,22 +205,20 @@ int blink(){
 
 
 
-int toggle_led_2(){
+void toggle_led_2(){
 	if((LCDDR8&1)== 0)
 	LCDDR8 = LCDDR8|1;
 	else
 	LCDDR8= LCDDR8^1;
-	return 0;
 }
 
 
-int blink_2(){
+void blink_2(){
 	
 	if((LCDDR8&1)== 0)
 		LCDDR8 = LCDDR8|2;
 	else
 		LCDDR8= LCDDR8^2;
-	return 0;
 }
 
 

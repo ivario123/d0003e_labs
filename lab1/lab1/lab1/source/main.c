@@ -118,7 +118,7 @@ void task_4(void){
     while(1) 
     {	
 		// Calculate the next prime
-		long new_num = next_prime(num);
+		next_prime(&num);
 		// Check if any interrupts have been triggered
 		if(target_time != check_interrupts(target_time,last_time,&buttonstate)){
 			
@@ -128,12 +128,7 @@ void task_4(void){
 		}
 		
 		
-		// Write to screen if a new prime has been found
-		if(new_num!=num){
-			write_long(num);
-		}
-		// Update last number
-		num = new_num;
+		write_long(num);
     }
 }
 
