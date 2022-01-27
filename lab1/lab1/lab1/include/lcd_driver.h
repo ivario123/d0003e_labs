@@ -20,7 +20,7 @@ enum ERROR{
 * @param ch the character that is to be written on screen
 * @param pos the position on screen [0,1,...,5]
 **/
-void init_lcd ();
+void init_lcd (void);
 
 /**
 * Writes a character to the given position on screen.
@@ -47,21 +47,24 @@ int is_prime(long num);
 /**
 * Loops for ever while generating new prime numbers
 */
-void primes();
+void primes(void);
 /**
 * Toggles a segment on the display
 **/
-void toggle_led();
+void toggle_led(void);
 /**
 * Writes a long to the lcd display
 * @param num the number to be displayed
 **/
 void write_long(long num);
 
-
+/**
+* Blinks a led segment every half second
+**/
+void blink(void);
 /************************************************************************/
 /*					Modified functions for part 4						*/
 /************************************************************************/
-void toggle_led_2();
-void blink_2();
+void toggle_led_2(void);
+void blink_2(void);
 #endif /* LCD_DRIVER_H_ */

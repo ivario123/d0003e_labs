@@ -2,6 +2,8 @@
 #include "avr/iom169p.h"
 #include "../include/lcd_driver.h"
 #include "../include/string.h"
+
+// Prescaler settings lifted from the documentation
 #define TIMER_SCALING_1024 0b101
 #define TIMER_SCALING_256  0b100
 #define TIMER_SCALING_64   0b011
@@ -23,8 +25,11 @@ void init(void){
 }
 
 void next_prime(long *num){
+	// Computes the next prime, if is_prime is broken it loops infinitely. Terrible for real-time systems
 	while(1)
 	{
+		// If number i smaller than 3, increment by 1
+		// Else increment by 2 if the number is odd, else increment by 1
 		if(*num >= 3){
 			if (*num%2 == 0)
 			*num++;
@@ -34,20 +39,24 @@ void next_prime(long *num){
 		else{
 			*num++;
 		}
+		// Check if new number is a prime number
 		if(is_prime(*num)==1){
 			return;
 		}
-		// Print string to screen
 	}
 }
 
 void button(){
+	// Uses two bussy wait loops to ensure that the switch needs to be pushed and released before event trigger
+	
+	// Could be scrapped, but changing this to a 1 makes the event trigger on button press not release. Does not work for first switch tho.
 	uint8_t target_value = 0;
+	// Set a default value
 	LCDDR1 = LCDDR1|2;
 	while(1){
 		while(target_value != (PINB&(1<<7))>>7);
 		while(target_value == (PINB&(1<<7))>>7);
-		// Swap states
+		// Event trigger
 		if(((LCDDR1&2)^2)== 0){
 			LCDDR1 = LCDDR1^2;
 			LCDDR2 = LCDDR2|2;
@@ -60,6 +69,7 @@ void button(){
 
 }
 void toggle_button_2(){
+	// Swap, if statement not needed but makes it a bit clearer
 	if((LCDDR13&1)== 1){
 		LCDDR13 = LCDDR13^1;
 		LCDDR18 = LCDDR18|1;
@@ -110,7 +120,7 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
 
 
 void task_4(void){
-	LCDDR13 = LCDDR13|1;
+	LCDDR13 = LCDDR13|1;										// Start value for the leds for switching
 	uint16_t freq = 31250/2;									// The segment should turn on and of every half cycle i.e flicker with 2 Hz frequency
 	volatile uint16_t target_time = TCNT1+freq;					// Target time, will wrap around just like the timer
 	volatile uint16_t last_time = target_time-freq;				// Last time the timer triggered, useful to look for overflows
@@ -120,7 +130,7 @@ void task_4(void){
 	while(1)
 	{
 		// Calculate the next prime
-		//next_prime(&num);
+		next_prime(&num);
 		// Check if any interrupts have been triggered
 		if(target_time != check_interrupts(target_time,last_time,&buttonstate)){
 			

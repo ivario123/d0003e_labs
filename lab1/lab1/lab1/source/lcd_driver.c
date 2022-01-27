@@ -1,48 +1,54 @@
-// Notes
-// 0x78 seems to controll lower segment of segment 5
-#include "../include/lcd_driver.h"
 #define CLOCK_SPEED 8000000  				// The clock speed in Hz
 #define REFRESH_RATE 31250					// A second measured in bits of the timer register
 
+// Our dicitonary
 long dict_arr[] = {
-	0x1551,
-	0x0110,
-	0x1E11,
-	0x1B11,
-	0x0B50,
-	0x1B41,
-	0x1F41,
-	0x0111,
-	0x1F51,
-	0x1B51
+	0x1551,				// Represents 0
+	0x0110,				// Represents 1
+	0x1E11,				// ...		  2
+	0x1B11,				// ...		  3
+	0x0B50,				// ...		  4
+	0x1B41,				// ...		  5
+	0x1F41,				// ...		  6
+	0x0111,				// ...		  7
+	0x1F51,				// ...		  8
+	0x1B51				// ...		  9
 };
 
 
 void write_char(char ch,int pos){
+	// Writes a char to the lcd on possition pos
 	if(pos < 0 || pos > 5)
-	return;
+		return;
 	// Predefine num
 	uint16_t num = 0x0;
+	// Set the first address to LCDDR0
 	uint8_t *first_address = (uint8_t *)0xEC;
-	volatile uint8_t *address = first_address+(pos>>1);
-	// Clear the segment
+	// set the address we are using to the first address offset by the floored division of pos/2
+	// This is done since a 8 bit register is shared among neighboring positions, so the lower bits
+	// correspond to the even numbered positions and the higher bits correspond to the odd numbered positions
+	uint8_t *address = first_address+(pos>>1);
+	
 	// Set num to a value if exists in array
 	if(ch>=48&& ch<=57){
 		num = dict_arr[ch-48];
 	}
+	// Else it will clear the segment by writing 0 to it
 	
-	
+	// Loop over every nibble i.e. 4 itterations
 	for( int i= 0; i < 4; i++){
 		// Always grab the lowest 4 bits of the char as nibble
 		uint8_t nibble = num&0xf;
+		// Remove lsb-lsb+4
 		num>>=4;
 		
-		
+		// Check if pos is even or odd
 		if(pos%2==0)
-		{
+		{	
+			// Clear the bits we want to write over
 			*address = (*address)&0xf0;
+			// Write the data to the lower 
 			*address = (*address)|nibble;
-			// Write the data to the lower bits
 		}
 		else
 		{
@@ -50,6 +56,7 @@ void write_char(char ch,int pos){
 			*address =  *address | nibble << 4;
 			// Write the data to the higher bits
 		}
+		// increment the address by 5*8bits
 		address+=5;
 		
 	}
@@ -57,17 +64,22 @@ void write_char(char ch,int pos){
 	
 }
 void write_string(char* ch, int first_pos){
+	// Writes a string to the lcd, wraps around for lengths of string > 6
 	first_pos = first_pos%MAX_POS;
+	// loop until end of string
 	while(*ch != '\0'){
+		// Write the char to the lcd
 		write_char(*ch,first_pos);
+		// Increment the position
 		first_pos++;
+		// wrap around if needed
 		first_pos = first_pos%MAX_POS;
 		ch++;
 	}
 }
 /************************************************************************/
-/* This function could be shortend significantly,       */
-/* I do however feel that this is its most readable form*/
+/*				This function could be shortened significantly,	        */
+/*			I do however feel that this is its most readable form		*/
 /************************************************************************/
 void init_lcd(void){
 	
@@ -120,10 +132,14 @@ void init_lcd(void){
 
 
 void write_long(long num){
-	int temp;
+	// Writes a long int to the display
+	int temp; // Temporary int buffer
 	six_least_significant(num,&temp);
-	char buffer[10];
+	// Declare a 7 character buffer to store the char representation of the number
+	char buffer[7];
+	// Convert the int to a string
 	int_to_str(temp,buffer);
+	// Write the string to the display
 	write_string(buffer,0);
 }
 
@@ -138,36 +154,39 @@ int is_prime(long num){
 	return 0;
 	// Start on 3
 	long counter = 3;
-	// Only check numbers up to half of num
+	// Check all numbers n = 3 ... num since optimizing is not allowed
 	while(counter <num){
 		if(num%counter == 0)
 		return 0;
+		// In reality you would increment by two.
 		counter++;
 	}
 	return 1;
 }
 
-void primes(){
+void primes(void){
 	// Simply generates primes
-	long num = 0;
+	long num = 0; // Set start value
 	while(1)
 	{
+		// Only check odd numbers, helps a bit for larger numbers
+		// This also catches num%2 == 0 inputs
 		if(num >= 3){
 			if (num % 2 == 0)
-			num++;
+				num++;
 			else
-			num +=2;
+				num +=2;
 		}
 		else
-		num++;
+			num++;
 		if(is_prime(num)==1){
+			// Write the num to display if it is a prime
 			write_long(num);
 		}
-		// Print string to screen
 	}
 }
 
-void toggle_led(){
+void toggle_led(void){
 	// If the segment is on turn it of
 	if((LCDDR0&2)>>1== 0)
 	LCDDR0 = LCDDR0|2;
@@ -175,7 +194,7 @@ void toggle_led(){
 	else
 	LCDDR0= LCDDR0^2;
 }
-int blink(){
+void blink(void){
 	uint16_t freq = 31250/2;		// The segment should turn on and of every half cycle i.e. flicker with 2 Hz frequency
 	uint16_t last_time = TCNT1;
 	// uint16t's wrap around in the same way for timer and normal addition
@@ -184,7 +203,6 @@ int blink(){
 		last_time =(uint16_t)TCNT1;
 		toggle_led();
 	}
-	return 0;
 }
 
 
@@ -203,7 +221,8 @@ int blink(){
 
 
 
-void toggle_led_2(){
+void toggle_led_2(void){
+	// Could remove the if statement but this is more readable
 	if((LCDDR8&1)== 0)
 	LCDDR8 = LCDDR8|1;
 	else
@@ -211,7 +230,8 @@ void toggle_led_2(){
 }
 
 
-void blink_2(){
+void blink_2(void){
+	// Could remove the if statement but this is more readable
 	
 	if((LCDDR8&1)== 0)
 	LCDDR8 = LCDDR8|2;
