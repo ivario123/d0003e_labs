@@ -79,11 +79,12 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
 	uint16_t time = (uint16_t)TCNT1;
     
     // Catches wrap around condition
-	if(!((prev_time>target_time && time >= prev_time))){
-		if(time >= target_time)
+	//if(!((prev_time>target_time && time >= prev_time))){
+		
+	if(target_time <= time){
+		if((prev_time < time && target_time <= time )||(prev_time > time && time >= target_time))
 		{    
 			target_time=time;
-			toggle_led_2();
 		}
 	}
 	
@@ -123,6 +124,7 @@ void task_4(void){
 		// Check if any interrupts have been triggered
 		if(target_time != check_interrupts(target_time,last_time,&buttonstate)){
 			
+			toggle_led_2();
 			// uints wrap around in the same way as the timer reg
 			last_time = target_time;
 			target_time+=freq;
