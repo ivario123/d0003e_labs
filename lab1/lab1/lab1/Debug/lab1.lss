@@ -13,19 +13,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   4 .debug_aranges 000000b8  00000000  00000000  0000046c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00000dcd  00000000  00000000  00000524  2**0
+  5 .debug_info   00000dcf  00000000  00000000  00000524  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000a62  00000000  00000000  000012f1  2**0
+  6 .debug_abbrev 00000a4e  00000000  00000000  000012f3  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   000006cb  00000000  00000000  00001d53  2**0
+  7 .debug_line   000006cb  00000000  00000000  00001d41  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  000001bc  00000000  00000000  00002420  2**2
+  8 .debug_frame  000001bc  00000000  00000000  0000240c  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000559  00000000  00000000  000025dc  2**0
+  9 .debug_str    00000559  00000000  00000000  000025c8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000564  00000000  00000000  00002b35  2**0
+ 10 .debug_loc    00000564  00000000  00000000  00002b21  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000098  00000000  00000000  00003099  2**0
+ 11 .debug_ranges 00000098  00000000  00000000  00003085  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -229,7 +229,7 @@ void toggle_led_2(void){
  188:	08 95       	ret
 
 0000018a <init>:
-			LCDDR1 = LCDDR1^2;
+			// Turn LCDDR2 bit 1 high
 			LCDDR2 = LCDDR2|2;
 		}
 		else{
@@ -251,9 +251,21 @@ void toggle_led_2(void){
  1a4:	08 95       	ret
 
 000001a6 <next_prime>:
+}
+
+/************************************************************************/
+/*								TASK 4									*/
+/************************************************************************/
+void next_prime(long *num){
  1a6:	cf 93       	push	r28
  1a8:	df 93       	push	r29
  1aa:	ec 01       	movw	r28, r24
+	// Computes the next prime, if is_prime is broken it loops infinitely. Terrible for real-time systems
+	while(1)
+	{
+		// If number i smaller than 3, increment by 1
+		// Else increment by 2 if the number is odd, else increment by 1
+		if(*num >= 3){
  1ac:	88 81       	ld	r24, Y
  1ae:	99 81       	ldd	r25, Y+1	; 0x01
  1b0:	aa 81       	ldd	r26, Y+2	; 0x02
@@ -263,10 +275,14 @@ void toggle_led_2(void){
  1b8:	a1 05       	cpc	r26, r1
  1ba:	b1 05       	cpc	r27, r1
  1bc:	64 f0       	brlt	.+24     	; 0x1d6 <next_prime+0x30>
+			if (*num%2 == 0)
  1be:	80 fd       	sbrc	r24, 0
  1c0:	02 c0       	rjmp	.+4      	; 0x1c6 <next_prime+0x20>
+			*num++;
  1c2:	24 96       	adiw	r28, 0x04	; 4
  1c4:	09 c0       	rjmp	.+18     	; 0x1d8 <next_prime+0x32>
+			else
+			*num +=2;
  1c6:	02 96       	adiw	r24, 0x02	; 2
  1c8:	a1 1d       	adc	r26, r1
  1ca:	b1 1d       	adc	r27, r1
@@ -275,7 +291,13 @@ void toggle_led_2(void){
  1d0:	aa 83       	std	Y+2, r26	; 0x02
  1d2:	bb 83       	std	Y+3, r27	; 0x03
  1d4:	01 c0       	rjmp	.+2      	; 0x1d8 <next_prime+0x32>
+		}
+		else{
+			*num++;
  1d6:	24 96       	adiw	r28, 0x04	; 4
+		}
+		// Check if new number is a prime number
+		if(is_prime(*num)==1){
  1d8:	68 81       	ld	r22, Y
  1da:	79 81       	ldd	r23, Y+1	; 0x01
  1dc:	8a 81       	ldd	r24, Y+2	; 0x02
@@ -283,20 +305,24 @@ void toggle_led_2(void){
  1e0:	0e 94 72 00 	call	0xe4	; 0xe4 <is_prime>
  1e4:	01 97       	sbiw	r24, 0x01	; 1
  1e6:	11 f7       	brne	.-60     	; 0x1ac <next_prime+0x6>
+			return;
+		}
+	}
+}
  1e8:	df 91       	pop	r29
  1ea:	cf 91       	pop	r28
  1ec:	08 95       	ret
 
 000001ee <toggle_button_2>:
-	}
 
-}
-void toggle_button_2(){
+
+void toggle_button_2(void){
 	// Swap, if statement not needed but makes it a bit clearer
 	if((LCDDR13&1)== 1){
  1ee:	80 91 f9 00 	lds	r24, 0x00F9	; 0x8000f9 <__TEXT_REGION_LENGTH__+0x7fc0f9>
  1f2:	80 ff       	sbrs	r24, 0
  1f4:	0c c0       	rjmp	.+24     	; 0x20e <__EEPROM_REGION_LENGTH__+0xe>
+		// Look at button
 		LCDDR13 = LCDDR13^1;
  1f6:	e9 ef       	ldi	r30, 0xF9	; 249
  1f8:	f0 e0       	ldi	r31, 0x00	; 0
@@ -349,12 +375,12 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
  236:	90 91 85 00 	lds	r25, 0x0085	; 0x800085 <__TEXT_REGION_LENGTH__+0x7fc085>
     
     // Catches wrap around condition
-	//if(!((prev_time>target_time && time >= prev_time))){
-		
+	// if plausible time
 	if(target_time <= time){
  23a:	8c 17       	cp	r24, r28
  23c:	9d 07       	cpc	r25, r29
  23e:	38 f0       	brcs	.+14     	; 0x24e <check_interrupts+0x28>
+		// If in valid range
 		if((prev_time < time && target_time <= time )||(prev_time > time && time >= target_time))
  240:	86 17       	cp	r24, r22
  242:	97 07       	cpc	r25, r23
@@ -363,6 +389,7 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
  248:	9d 07       	cpc	r25, r29
  24a:	08 f0       	brcs	.+2      	; 0x24e <check_interrupts+0x28>
 		{    
+			// Register a timer event
 			target_time=time;
  24c:	ec 01       	movw	r28, r24
 		}
@@ -373,6 +400,7 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
  24e:	1f 99       	sbic	0x03, 7	; 3
  250:	0f c0       	rjmp	.+30     	; 0x270 <check_interrupts+0x4a>
 	{
+		// Buttonstate 0 means that the button has been pressed and released
 		if(*buttonstate==0){
  252:	f8 01       	movw	r30, r16
  254:	80 81       	ld	r24, Z
@@ -382,12 +410,13 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
  25a:	81 e0       	ldi	r24, 0x01	; 1
  25c:	80 83       	st	Z, r24
 		}
-		
+		// Buttonstate 2 means that the button was released before this event
 		if(*buttonstate == 2){
  25e:	f8 01       	movw	r30, r16
  260:	80 81       	ld	r24, Z
  262:	82 30       	cpi	r24, 0x02	; 2
  264:	59 f4       	brne	.+22     	; 0x27c <check_interrupts+0x56>
+			// Triggers event
 			toggle_button_2();
  266:	0e 94 f7 00 	call	0x1ee	; 0x1ee <toggle_button_2>
 			*buttonstate = 0;
@@ -514,11 +543,11 @@ int main(void)
  314:	0e 94 c5 00 	call	0x18a	; 0x18a <init>
 	init_lcd();
  318:	0e 94 45 00 	call	0x8a	; 0x8a <init_lcd>
-	//write_char('1',2);
 	
-	//blink();
-	//button();
-	//primes();
+	// We can't run all functions after one another since they all implement some sort of busy wait
+	// This would stop the next function from running.
+	// Thus we need to rewrite the functions blink, button, primes to one large loop and call the helper functions
+	// From there.
 	task_4();
  31c:	0e 94 44 01 	call	0x288	; 0x288 <task_4>
 

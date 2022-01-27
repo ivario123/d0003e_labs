@@ -28,7 +28,7 @@ void int_to_str(int num,char* buffer){
 	if (num == 0){
 		*buffer = 48;
 		*(++buffer) = '\0';
-		return 0;
+		return;
 	}
 	// Track start of string
 	char * start = buffer;

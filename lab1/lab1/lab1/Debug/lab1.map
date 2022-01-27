@@ -535,17 +535,17 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0xdcd
+.debug_info     0x00000000      0xdcf
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x7b6 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega169p/avr5/crtatmega169p.o
  .debug_info    0x000007b6      0x3a7 source/lcd_driver.o
- .debug_info    0x00000b5d      0x270 source/main.o
+ .debug_info    0x00000b5d      0x272 source/main.o
 
-.debug_abbrev   0x00000000      0xa62
+.debug_abbrev   0x00000000      0xa4e
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x74b C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega169p/avr5/crtatmega169p.o
  .debug_abbrev  0x0000074b      0x174 source/lcd_driver.o
- .debug_abbrev  0x000008bf      0x1a3 source/main.o
+ .debug_abbrev  0x000008bf      0x18f source/main.o
 
 .debug_line     0x00000000      0x6cb
  *(.debug_line .debug_line.* .debug_line_end)
