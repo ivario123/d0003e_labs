@@ -9,7 +9,7 @@
 #define TIMER_SCALING_1    0b001
 #define TIMER_STOP		   0b000
 
-int init(void){
+void init(void){
 	// Setting power options
 	CLKPR = 0x80;
 	CLKPR = 0X00;
@@ -20,30 +20,28 @@ int init(void){
 	
 	// Setting the pull up
 	PORTB = PORTB|(1<<7);
-	
-	return success;
 }
 
-long next_prime(long num){
+void next_prime(long *num){
 	while(1)
 	{
-		if(num >= 3){
-			if (num%2 == 0)
-			num++;
+		if(*num >= 3){
+			if (*num%2 == 0)
+			*num++;
 			else
-			num +=2;
+			*num +=2;
 		}
 		else{
-			num++;
+			*num++;
 		}
-		if(is_prime(num)==1){
-			return num;
+		if(is_prime(*num)==1){
+			return;
 		}
 		// Print string to screen
 	}
 }
 
-int button(){
+void button(){
 	uint8_t target_value = 0;
 	LCDDR1 = LCDDR1|2;
 	while(1){
@@ -71,6 +69,8 @@ void toggle_button_2(){
 		LCDDR18 = LCDDR18^1;
 	}
 }
+
+
 int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstate){
 	
 	
@@ -78,13 +78,13 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
 	// Checking the timer interrupt
 	uint16_t time = (uint16_t)TCNT1;
 	
-	
-	if(target_time < time && !((prev_time>target_time&& time>prev_time)||time < target_time))
+	// Catches wrap around condition
+	if( time >= target_time && !(( prev_time > target_time && time > prev_time ) || time < target_time ))
 	{
-		
 		target_time=time;
 		toggle_led_2();
 	}
+	
 	// check if button state has changed
 	if((1!=(PINB&(1<<7))>>7))
 	{
@@ -110,13 +110,14 @@ void task_4(void){
 	LCDDR13 = LCDDR13|1;
 	uint16_t freq = 31250/2;									// The segment should turn on and of every half cycle i.e flicker with 2 Hz frequency
 	volatile uint16_t target_time = TCNT1+freq;					// Target time, will wrap around just like the timer
-	volatile uint16_t last_time = target_time-freq;				// Last time the timer triggerd, useful to look for overflows
+	volatile uint16_t last_time = target_time-freq;				// Last time the timer triggered, useful to look for overflows
 	uint8_t buttonstate = 1;									// Tracks button actions, event triggers on 3
-	long num = 25;
+	long num = 1;												// Last number checked
+	
 	while(1)
 	{
 		// Calculate the next prime
-		long new_num = next_prime(num);
+		next_prime(&num);
 		// Check if any interrupts have been triggered
 		if(target_time != check_interrupts(target_time,last_time,&buttonstate)){
 			
@@ -124,11 +125,9 @@ void task_4(void){
 			last_time = target_time;
 			target_time+=freq;
 		}
-		// Do the other stuff
-		if(new_num!=num){
-			write_long(num);
-		}
-		num = new_num;
+		
+		
+		write_long(num);
 	}
 }
 
