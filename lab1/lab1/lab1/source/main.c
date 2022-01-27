@@ -129,7 +129,7 @@ void task_4(void){
 		}
 		
 		
-		write_long(num);
+		write_long(300);
     }
 }
 

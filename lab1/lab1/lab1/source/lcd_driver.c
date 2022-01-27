@@ -23,10 +23,10 @@ long dict_arr[] = {
 void write_char(char ch,int pos){
 	if(pos < 0 || pos > 5)
 		return;
-	// Predefine num
-	uint16_t num = 0x0;
-	uint8_t *first_address = (uint8_t *)0xEC;
-	volatile uint8_t *address = first_address+(pos>>1);
+		
+	uint16_t num = 0x0;									// Assumes char is not in range
+	uint8_t *first_address = (uint8_t *)0xEC;			// Sets the frist address accessed to LCDDR0 i.e. 0xEC
+	volatile uint8_t *address = first_address+(pos>>1); // Add the offset to the address, offset by pos divided by 2 floored
 	// Clear the segment
 	// Set num to a value if exists in array
 	if(ch>=48&& ch<=57){
