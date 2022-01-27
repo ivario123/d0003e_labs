@@ -1,3 +1,5 @@
+// Notes
+// 0x78 seems to controll lower segment of segment 5
 #include "../include/lcd_driver.h"
 #define CLOCK_SPEED 8000000  				// The clock speed in Hz
 #define REFRESH_RATE 31250					// A second measured in bits of the timer register
@@ -16,9 +18,9 @@ long dict_arr[] = {
 };
 
 
-int write_char(char ch,int pos){
+void write_char(char ch,int pos){
 	if(pos < 0 || pos > 5)
-	return 0;
+	return;
 	// Predefine num
 	uint16_t num = 0x0;
 	uint8_t *first_address = (uint8_t *)0xEC;
@@ -51,11 +53,10 @@ int write_char(char ch,int pos){
 		address+=5;
 		
 	}
-	return success;
 	
 	
 }
-int write_string(char* ch, int first_pos){
+void write_string(char* ch, int first_pos){
 	first_pos = first_pos%MAX_POS;
 	while(*ch != '\0'){
 		write_char(*ch,first_pos);
@@ -63,13 +64,12 @@ int write_string(char* ch, int first_pos){
 		first_pos = first_pos%MAX_POS;
 		ch++;
 	}
-	return success;
 }
 /************************************************************************/
 /* This function could be shortend significantly,       */
 /* I do however feel that this is its most readable form*/
 /************************************************************************/
-int init_lcd(){
+void init_lcd(void){
 	
 	
 	//-----------------------------------
@@ -116,8 +116,6 @@ int init_lcd(){
 	LCDCCR = LCDCCR&(~(7<< LCDDC0));
 	// Setting lsb -> lsb+3 to 1 to set voltage to 3.35V
 	LCDCCR = LCDCCR|((15));
-	
-	return success;
 }
 
 
@@ -141,7 +139,7 @@ int is_prime(long num){
 	// Start on 3
 	long counter = 3;
 	// Only check numbers up to half of num
-	while(counter <num/2){
+	while(counter <num){
 		if(num%counter == 0)
 		return 0;
 		counter++;
@@ -155,7 +153,7 @@ void primes(){
 	while(1)
 	{
 		if(num >= 3){
-			if (num%2 == 0)
+			if (num % 2 == 0)
 			num++;
 			else
 			num +=2;
@@ -169,14 +167,13 @@ void primes(){
 	}
 }
 
-int toggle_led(){
+void toggle_led(){
 	// If the segment is on turn it of
 	if((LCDDR0&2)>>1== 0)
 	LCDDR0 = LCDDR0|2;
 	// Else turn it on
 	else
 	LCDDR0= LCDDR0^2;
-	return 0;
 }
 int blink(){
 	uint16_t freq = 31250/2;		// The segment should turn on and of every half cycle i.e. flicker with 2 Hz frequency
@@ -206,20 +203,18 @@ int blink(){
 
 
 
-int toggle_led_2(){
+void toggle_led_2(){
 	if((LCDDR8&1)== 0)
 	LCDDR8 = LCDDR8|1;
 	else
 	LCDDR8= LCDDR8^1;
-	return 0;
 }
 
 
-int blink_2(){
+void blink_2(){
 	
 	if((LCDDR8&1)== 0)
 	LCDDR8 = LCDDR8|2;
 	else
 	LCDDR8= LCDDR8^2;
-	return 0;
 }

@@ -77,12 +77,14 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
 	
 	// Checking the timer interrupt
 	uint16_t time = (uint16_t)TCNT1;
-	
-	// Catches wrap around condition
-	if( time >= target_time && !(( prev_time > target_time && time > prev_time ) || time < target_time ))
-	{
-		target_time=time;
-		toggle_led_2();
+    
+    // Catches wrap around condition
+	if(!((prev_time>target_time && time >= prev_time))){
+		if(time >= target_time)
+		{    
+			target_time=time;
+			toggle_led_2();
+		}
 	}
 	
 	// check if button state has changed
@@ -117,7 +119,7 @@ void task_4(void){
 	while(1)
 	{
 		// Calculate the next prime
-		next_prime(&num);
+		//next_prime(&num);
 		// Check if any interrupts have been triggered
 		if(target_time != check_interrupts(target_time,last_time,&buttonstate)){
 			
@@ -127,7 +129,7 @@ void task_4(void){
 		}
 		
 		
-		write_long(num);
+		//write_long(num);
 	}
 }
 
