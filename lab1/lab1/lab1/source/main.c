@@ -3,7 +3,7 @@
 #include "../include/lcd_driver.h"
 #include "../include/string.h"
 
-// Prescaler settings lifted from the documentation
+// Pre-scaler settings lifted from the documentation
 #define TIMER_SCALING_1024 0b101
 #define TIMER_SCALING_256  0b100
 #define TIMER_SCALING_64   0b011
@@ -108,7 +108,7 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
 	// if plausible time
 	if(target_time <= time){
 		// If in valid range
-		if((prev_time > target_time&& time =< prev_time)|| target_time > prev_time)//(prev_time < time && target_time <= time )||(prev_time > time && time >= target_time))
+		if((prev_time > target_time&& time <= prev_time)|| target_time > prev_time)
 		{    
 			// Register a timer event
 			target_time=time;
@@ -160,7 +160,7 @@ void task_4(void){
 		}
 		
 		
-		//write_long(num);
+		write_long(num);
 	}
 }
 
@@ -179,7 +179,9 @@ int main(void)
 	//button();
 	//primes();
 	
-	
+	/************************************************************************/
+	/*						Answer to question 4							*/
+	/************************************************************************/
 	// We can't run all functions after one another since they all implement some sort of busy wait
 	// This would stop the next function from running.
 	// Thus we need to rewrite the functions blink, button, primes to one large loop and call the helper functions
