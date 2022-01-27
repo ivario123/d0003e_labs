@@ -150,7 +150,7 @@ int is_prime(long num){
 	// Start on 3
 	long counter = 3;
 	// Only check numbers up to half of num
-	while(counter <num/2){
+	while(counter <num){
 		if(num%counter == 0)
 			return 0;
 		counter++;
@@ -164,7 +164,7 @@ void primes(){
 	while(1)
 	{
 		if(num >= 3){
-			if (num%2 == 0)
+			if (num % 2 == 0)
 				num++;
 			else
 				num +=2;	

@@ -119,7 +119,7 @@ void task_4(void){
 	volatile uint16_t target_time = TCNT1+freq;					// Target time, will wrap around just like the timer
 	volatile uint16_t last_time = target_time-freq;				// Last time the timer triggerd, useful to look for overflows
 	uint8_t buttonstate = 1;									// Tracks button actions, event triggers on 3
-	long num = 25;
+	volatile long num = 0;
     while(1) 
     {	
 		// Calculate the next prime
