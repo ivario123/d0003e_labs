@@ -17,6 +17,65 @@ long dict_arr[] = {
 };
 
 
+
+/************************************************************************/
+/*								TASK 1									*/
+/************************************************************************/
+
+
+/************************************************************************/
+/*				This function could be shortened significantly,	        */
+/*			I do however feel that this is its most readable form		*/
+/************************************************************************/
+void init_lcd(void){
+	
+	
+	//-----------------------------------
+	// Status manipulation
+	//-----------------------------------
+	
+	// enabling the lcd
+	LCDCRA = LCDCRA|(1<<LCDEN);
+	// Setting low power wave form
+	LCDCRA = LCDCRA|(1<<LCDAB);
+	// disabling the interrupt
+	LCDCRA = LCDCRA&(~(1<<LCDIF));
+	// Disabling blanking
+	LCDCRA = LCDCRA&(~(1));
+	
+	
+	//-----------------------------------
+	// Clock manipulation
+	//-----------------------------------
+	
+	// setting the clock source to external
+	LCDCRB = LCDCRB|(1<<LCDCS);
+	// Setting Bias
+	LCDCRB = LCDCRB&(~(1<<LCD2B));
+	// Setting duty cycle
+	LCDCRB = LCDCRB|((3<<LCDMUX0));
+	// Setting number of active segments to 25
+	LCDCRB = LCDCRB|(7);
+	
+	
+	//-----------------------------------
+	// Frame rate manipulation
+	//-----------------------------------
+	// Set n = 16
+	LCDFRR = LCDFRR&(~(7<<LCDPS0));
+	// Set D = 8
+	LCDFRR = LCDFRR|(7);
+	
+	
+	//-----------------------------------
+	// Contrast manipulation
+	//-----------------------------------
+	// Setting msb->msb-2 to 0 to set drive time to 300 us
+	LCDCCR = LCDCCR&(~(7<< LCDDC0));
+	// Setting lsb -> lsb+3 to 1 to set voltage to 3.35V
+	LCDCCR = LCDCCR|((15));
+}
+
 void write_char(char ch,int pos){
 	// Writes a char to the lcd on position pos
 	if(pos < 0 || pos > 5)
@@ -78,58 +137,7 @@ void write_string(char* ch, int first_pos){
 		ch++;
 	}
 }
-/************************************************************************/
-/*				This function could be shortened significantly,	        */
-/*			I do however feel that this is its most readable form		*/
-/************************************************************************/
-void init_lcd(void){
-	
-	
-	//-----------------------------------
-	// Status manipulation
-	//-----------------------------------
-	
-	// enabling the lcd
-	LCDCRA = LCDCRA|(1<<LCDEN);
-	// Setting low power wave form
-	LCDCRA = LCDCRA|(1<<LCDAB);
-	// disabling the interrupt
-	LCDCRA = LCDCRA&(~(1<<LCDIF));
-	// Disabling blanking
-	LCDCRA = LCDCRA&(~(1));
-	
-	
-	//-----------------------------------
-	// Clock manipulation
-	//-----------------------------------
-	
-	// setting the clock source to external
-	LCDCRB = LCDCRB|(1<<LCDCS);
-	// Setting Bias
-	LCDCRB = LCDCRB&(~(1<<LCD2B));
-	// Setting duty cycle
-	LCDCRB = LCDCRB|((3<<LCDMUX0));
-	// Setting number of active segments to 25
-	LCDCRB = LCDCRB|(7);
-	
-	
-	//-----------------------------------
-	// Frame rate manipulation
-	//-----------------------------------
-	// Set n = 16
-	LCDFRR = LCDFRR&(~(7<<LCDPS0));
-	// Set D = 8
-	LCDFRR = LCDFRR|(7);
-	
-	
-	//-----------------------------------
-	// Contrast manipulation
-	//-----------------------------------
-	// Setting msb->msb-2 to 0 to set drive time to 300 us
-	LCDCCR = LCDCCR&(~(7<< LCDDC0));
-	// Setting lsb -> lsb+3 to 1 to set voltage to 3.35V
-	LCDCCR = LCDCCR|((15));
-}
+
 
 
 void write_long(long num){
@@ -187,6 +195,11 @@ void primes(void){
 	}
 }
 
+
+/************************************************************************/
+/*								TASK 2									*/
+/************************************************************************/
+
 void toggle_led(void){
 	// If the segment is on turn it of
 	if((LCDDR0&2)>>1== 0)
@@ -216,7 +229,9 @@ void blink(void){
 
 
 
-
+/************************************************************************/
+/*								TASK 4									*/
+/************************************************************************/
 
 
 

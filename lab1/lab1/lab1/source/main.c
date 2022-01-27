@@ -11,6 +11,10 @@
 #define TIMER_SCALING_1    0b001
 #define TIMER_STOP		   0b000
 
+/************************************************************************/
+/*								TASK 1,2,3,4							*/
+/************************************************************************/
+
 void init(void){
 	// Setting power options
 	CLKPR = 0x80;
@@ -24,6 +28,38 @@ void init(void){
 	PORTB = PORTB|(1<<7);
 }
 
+
+/************************************************************************/
+/*								TASK 3									*/
+/************************************************************************/
+void button(void){
+	// Uses two busy wait loops to ensure that the switch needs to be pushed and released before event trigger
+	
+	// Could be scrapped, but changing this to a 1 makes the event trigger on button press not release. Does not work for first switch tho.
+	uint8_t target_value = 0;
+	// Set a default value
+	LCDDR1 = LCDDR1|2;
+	while(1){
+		while(target_value != (PINB&(1<<7))>>7);
+		while(target_value == (PINB&(1<<7))>>7);
+		// check if bit 1 of LCDDR1 is high
+		if(((LCDDR1&2)^2)== 0){
+			// Turn LCDDR1 bit 1 low if it's high, else turn it high
+			LCDDR1 = LCDDR1^2;
+			// Turn LCDDR2 bit 1 high
+			LCDDR2 = LCDDR2|2;
+		}
+		else{
+			LCDDR1 = LCDDR1|2;
+			LCDDR2 = LCDDR2^2;
+		}
+	}
+
+}
+
+/************************************************************************/
+/*								TASK 4									*/
+/************************************************************************/
 void next_prime(long *num){
 	// Computes the next prime, if is_prime is broken it loops infinitely. Terrible for real-time systems
 	while(1)
@@ -46,31 +82,11 @@ void next_prime(long *num){
 	}
 }
 
-void button(){
-	// Uses two busy wait loops to ensure that the switch needs to be pushed and released before event trigger
-	
-	// Could be scrapped, but changing this to a 1 makes the event trigger on button press not release. Does not work for first switch tho.
-	uint8_t target_value = 0;
-	// Set a default value
-	LCDDR1 = LCDDR1|2;
-	while(1){
-		while(target_value != (PINB&(1<<7))>>7);
-		while(target_value == (PINB&(1<<7))>>7);
-		// Event trigger
-		if(((LCDDR1&2)^2)== 0){
-			LCDDR1 = LCDDR1^2;
-			LCDDR2 = LCDDR2|2;
-		}
-		else{
-			LCDDR1 = LCDDR1|2;
-			LCDDR2 = LCDDR2^2;
-		}
-	}
 
-}
-void toggle_button_2(){
+void toggle_button_2(void){
 	// Swap, if statement not needed but makes it a bit clearer
 	if((LCDDR13&1)== 1){
+		// Look at button
 		LCDDR13 = LCDDR13^1;
 		LCDDR18 = LCDDR18|1;
 	}
@@ -89,11 +105,12 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
 	uint16_t time = (uint16_t)TCNT1;
     
     // Catches wrap around condition
-	//if(!((prev_time>target_time && time >= prev_time))){
-		
+	// if plausible time
 	if(target_time <= time){
+		// If in valid range
 		if((prev_time < time && target_time <= time )||(prev_time > time && time >= target_time))
 		{    
+			// Register a timer event
 			target_time=time;
 		}
 	}
@@ -101,11 +118,13 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
 	// check if button state has changed
 	if((1!=(PINB&(1<<7))>>7))
 	{
+		// Buttonstate 0 means that the button has been pressed and released
 		if(*buttonstate==0){
 			*buttonstate=1;
 		}
-		
+		// Buttonstate 2 means that the button was released before this event
 		if(*buttonstate == 2){
+			// Triggers event
 			toggle_button_2();
 			*buttonstate = 0;
 		}
@@ -159,6 +178,12 @@ int main(void)
 	//blink();
 	//button();
 	//primes();
+	
+	
+	// We can't run all functions after one another since they all implement some sort of busy wait
+	// This would stop the next function from running.
+	// Thus we need to rewrite the functions blink, button, primes to one large loop and call the helper functions
+	// From there.
 	task_4();
 	
 	while(1){
