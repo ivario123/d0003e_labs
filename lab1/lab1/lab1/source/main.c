@@ -108,7 +108,7 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
 	// if plausible time
 	if(target_time <= time){
 		// If in valid range
-		if((prev_time < time && target_time <= time )||(prev_time > time && time >= target_time))
+		if((prev_time > target_time&& time =< prev_time)|| target_time > prev_time)//(prev_time < time && target_time <= time )||(prev_time > time && time >= target_time))
 		{    
 			// Register a timer event
 			target_time=time;
