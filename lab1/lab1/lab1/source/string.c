@@ -1,10 +1,5 @@
-/*
- * string.c
- *
- * Created: 2022-01-24 13:56:30
- *  Author: ivarj
- */ 
-int revese(char* str){
+
+void revese(char* str){
 	char * eos = str;
 	while(*eos!='\0')
 	eos++;
@@ -21,7 +16,7 @@ int revese(char* str){
 void six_least_significant(long num,int *ret){
 	*ret = (int)(num-(num/1000000)*1000000);
 }
-int int_to_str(int num,char* buffer){
+void int_to_str(int num,char* buffer){
 	if (num == 0){
 		*buffer = 48;
 		*(++buffer) = '\0';

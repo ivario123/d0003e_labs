@@ -1,9 +1,4 @@
-/*
- * lcd_driver.h
- *
- * Created: 2022-01-21 08:20:55
- *  Author: ivarj
- */ 
+
 
 
 #ifndef LCD_DRIVER_H_
@@ -28,14 +23,14 @@ enum ERROR{
 * @param ch the character that is to be written on screen
 * @param pos the position on screen [0,1,...,5]
 **/
-int init_lcd ();
+void init_lcd ();
 
 /**
 * Writes a character to the given position on screen.
 * @param ch the character that is to be written on screen
 * @param pos the position on screen [0,1,...,5]
 **/
-int write_char(char ch,int pos);
+void write_char(char ch,int pos);
 
 /**
 * Writes a whole string to the screen, if it's longer than 6 elements then it will wrap around
@@ -43,7 +38,7 @@ int write_char(char ch,int pos);
 * @param first_pos the on which segment the string should be started 
 * @return 0 if success
 **/
-int write_string(char* ch, int first_pos);
+void write_string(char* ch, int first_pos);
 
 /**
 * Checks if a number is a prime number
@@ -59,7 +54,7 @@ void primes();
 /**
 * Toggles a segment on the display
 **/
-int toggle_led();
+void toggle_led();
 /**
 * Writes a long to the lcd display
 * @param num the number to be displayed
@@ -70,9 +65,6 @@ void write_long(long num);
 /************************************************************************/
 /*					Modified functions for part 4						*/
 /************************************************************************/
-int toggle_led_2();
-int blink_2();
-int write_char_2(char ch, int pos);
-int write_string_2(char * ch, int first_pos);
-void write_long_2(long num);
+void toggle_led_2();
+void blink_2();
 #endif /* LCD_DRIVER_H_ */

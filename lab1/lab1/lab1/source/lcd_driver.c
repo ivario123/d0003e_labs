@@ -1,9 +1,4 @@
-/*
- * lcd_driver.c
- *
- * Created: 2022-01-21 08:21:07
- *  Author: ivarj
- */ 
+
 
 // Notes
 // 0x78 seems to controll lower segment of segment 5
@@ -25,7 +20,7 @@ long dict_arr[] = {
 };
 
 
-int write_char(char ch,int pos){
+void write_char(char ch,int pos){
 	if(pos < 0 || pos > 5)
 		return 0;
 	// Predefine num
@@ -60,11 +55,10 @@ int write_char(char ch,int pos){
 		address+=5;
 		
 	}
-	return success;
 	
 	
 }
-int write_string(char* ch, int first_pos){
+void write_string(char* ch, int first_pos){
 	first_pos = first_pos%MAX_POS;
 	while(*ch != '\0'){
 		write_char(*ch,first_pos);
@@ -72,13 +66,12 @@ int write_string(char* ch, int first_pos){
 		first_pos = first_pos%MAX_POS;
 		ch++;
 	}
-	return success;
 }
 /************************************************************************/
 /* This function could be shortend significantly,       */
 /* I do however feel that this is its most readable form*/
 /************************************************************************/
-int init_lcd(){
+void init_lcd(void){
 		
 		
 		//-----------------------------------
@@ -125,8 +118,6 @@ int init_lcd(){
 		LCDCCR = LCDCCR&(~(7<< LCDDC0));
 		// Setting lsb -> lsb+3 to 1 to set voltage to 3.35V 
 		LCDCCR = LCDCCR|((15));
-		
-		return success;
 }
 
 

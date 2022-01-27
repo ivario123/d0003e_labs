@@ -1,9 +1,4 @@
-/*
- * lab1.c
- *
- * Created: 2022-01-17 15:25:57
- * Author : Ivar Jönsson
- */ 
+
 
 #include <avr/io.h>
 #include "avr/iom169p.h"
@@ -16,7 +11,7 @@
 #define TIMER_SCALING_1    0b001
 #define TIMER_STOP		   0b000
 
-int init(void){
+void init(void){
 	// Setting power options
 	CLKPR = 0x80;
 	CLKPR = 0X00;
@@ -27,30 +22,28 @@ int init(void){
 	
 	// Setting the pull up
 	PORTB = PORTB|(1<<7);
-	
-	return success;
 }
 
-long next_prime(long num){
+void next_prime(long *num){
 	while(1)
 	{
-		if(num >= 3){
-			if (num%2 == 0)
-			num++;
+		if(*num >= 3){
+			if (*num%2 == 0)
+			*num++;
 			else
-			num +=2;
+			*num +=2;
 		}
 		else{
-			num++;
+			*num++;
 		}
-		if(is_prime(num)==1){
-			return num;
+		if(is_prime(*num)==1){
+			return;
 		}
 		// Print string to screen
 	}
 }
 
-int button(){
+void button(){
 	uint8_t target_value = 0;
 	LCDDR1 = LCDDR1|2;
 	while(1){
@@ -119,9 +112,9 @@ void task_4(void){
 	LCDDR13 = LCDDR13|1;
 	uint16_t freq = 31250/2;									// The segment should turn on and of every half cycle i.e flicker with 2 Hz frequency
 	volatile uint16_t target_time = TCNT1+freq;					// Target time, will wrap around just like the timer
-	volatile uint16_t last_time = target_time-freq;				// Last time the timer triggerd, useful to look for overflows
+	volatile uint16_t last_time = target_time-freq;				// Last time the timer triggered, useful to look for overflows
 	uint8_t buttonstate = 1;									// Tracks button actions, event triggers on 3
-	volatile long num = 1;
+	long num = 1;												// Last number checked
     while(1) 
     {	
 		// Calculate the next prime
@@ -133,10 +126,13 @@ void task_4(void){
 			last_time = target_time;
 			target_time+=freq;
 		}
-		// Do the other stuff
+		
+		
+		// Write to screen if a new prime has been found
 		if(new_num!=num){
 			write_long(num);
 		}
+		// Update last number
 		num = new_num;
     }
 }

@@ -1,9 +1,4 @@
-/*
- * string.h
- *
- * Created: 2022-01-24 13:56:19
- *  Author: ivarj
- */ 
+
 
 
 #ifndef STRING_H_
@@ -16,7 +11,7 @@
 * @param str the string that should be reversed
 * @return 0 if success
 **/
-int revese(char* str);
+void revese(char* str);
 /**
 * Plucks out the six least significant digits in base 
 * @param num the number which to truncate
