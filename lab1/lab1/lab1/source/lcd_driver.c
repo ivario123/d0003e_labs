@@ -130,7 +130,7 @@ int init_lcd(){
 }
 
 
-void writeLong(long num){
+void write_long(long num){
 	int temp;
 	six_least_significant(num,&temp);
 	char buffer[10];
@@ -172,7 +172,7 @@ void primes(){
 		else 
 			num++;
 		if(is_prime(num)==1){
-			writeLong(num);
+			write_long(num);
 		}
 		// Print string to screen
 	}
@@ -227,73 +227,12 @@ int toggle_led_2(){
 int blink_2(){
 	
 	if((LCDDR8&1)== 0)
-	LCDDR8 = LCDDR8|2;
+		LCDDR8 = LCDDR8|2;
 	else
-	LCDDR8= LCDDR8^2;
+		LCDDR8= LCDDR8^2;
 	return 0;
 }
 
-int write_char_2(char ch, int pos){
-	if(pos < 0 || pos > 5)
-	return 0;
-	// Predefine num
-	uint16_t num = 0x0;
-	uint8_t *first_address = (uint8_t *)0xEC;
-	volatile uint8_t *address = first_address+(pos>>1);
-	// Clear the segment
-	// Set num to a value if exists in array
-	if(ch>=48&& ch<=57){
-		num = dict_arr[ch-48];
-	}
-	
-	
-	for( int i= 0; i < 4; i++){
-		// Always grab the lowest 4 bits of the char as nibble
-		uint8_t nibble = num&0xf;
-		num>>=4;
-		
-		
-		if(pos%2==0)
-		{
-			*address = (*address)&(0xf0);
-			*address = (*address)|nibble;
-			// Write the data to the lower bits
-		}
-		else
-		{
-			*address = (*address)&(0x0f);
-			*address =  *address | (nibble << 4);
-			// Write the data to the higher bits
-		}
-		address+=5;
-		
-	}
-	return success;
-}
-
-
-
-int write_string_2(char * ch, int first_pos){
-	first_pos = first_pos%MAX_POS;
-	while(*ch != '\0'){
-		write_char_2(*ch,first_pos);
-		first_pos++;
-		first_pos = first_pos%MAX_POS;
-		ch++;
-	}
-	return success;
-}
-
-
-
-
-void writeLong_2(long num){
-	int temp;
-	six_least_significant(num,&temp);
-	char buffer[10];
-	int_to_str(temp,buffer);
-	write_string_2(buffer,0);
-}
 
 
 

@@ -64,7 +64,7 @@ int toggle_led();
 * Writes a long to the lcd display
 * @param num the number to be displayed
 **/
-void writeLong(long num);
+void write_long(long num);
 
 
 /************************************************************************/
@@ -74,5 +74,5 @@ int toggle_led_2();
 int blink_2();
 int write_char_2(char ch, int pos);
 int write_string_2(char * ch, int first_pos);
-void writeLong_2(long num);
+void write_long_2(long num);
 #endif /* LCD_DRIVER_H_ */

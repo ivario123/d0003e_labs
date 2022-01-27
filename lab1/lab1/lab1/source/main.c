@@ -51,11 +51,11 @@ long next_prime(long num){
 }
 
 int button(){
-	uint8_t prev_value = 0;
+	uint8_t target_value = 0;
 	LCDDR1 = LCDDR1|2;
 	while(1){
-		while(prev_value!=(PINB&(1<<7))>>7);
-		while(prev_value == (PINB&(1<<7))>>7);
+		while(target_value != (PINB&(1<<7))>>7);
+		while(target_value == (PINB&(1<<7))>>7);
 		// Swap states
 		if(((LCDDR1&2)^2)== 0){
 			LCDDR1 = LCDDR1^2;
@@ -133,7 +133,7 @@ void task_4(void){
 		}
 		// Do the other stuff
 		if(new_num!=num){
-			writeLong_2(num);
+			write_long(num);
 		}
 		num = new_num;
     }
