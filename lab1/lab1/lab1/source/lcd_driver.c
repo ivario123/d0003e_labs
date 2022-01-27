@@ -1,7 +1,8 @@
+#include "../include/lcd_driver.h"
 #define CLOCK_SPEED 8000000  				// The clock speed in Hz
 #define REFRESH_RATE 31250					// A second measured in bits of the timer register
 
-// Our dicitonary
+// Our dictionary
 long dict_arr[] = {
 	0x1551,				// Represents 0
 	0x0110,				// Represents 1
@@ -17,7 +18,7 @@ long dict_arr[] = {
 
 
 void write_char(char ch,int pos){
-	// Writes a char to the lcd on possition pos
+	// Writes a char to the lcd on position pos
 	if(pos < 0 || pos > 5)
 		return;
 	// Predefine num

@@ -47,7 +47,7 @@ void next_prime(long *num){
 }
 
 void button(){
-	// Uses two bussy wait loops to ensure that the switch needs to be pushed and released before event trigger
+	// Uses two busy wait loops to ensure that the switch needs to be pushed and released before event trigger
 	
 	// Could be scrapped, but changing this to a 1 makes the event trigger on button press not release. Does not work for first switch tho.
 	uint8_t target_value = 0;
