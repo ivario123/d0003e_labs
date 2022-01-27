@@ -1,6 +1,3 @@
-
-
-
 #ifndef LCD_DRIVER_H_
 #define LCD_DRIVER_H_
 
@@ -14,7 +11,7 @@ enum ERROR{
 	success = 0,
 	startup = 1,
 	writechar = 1
-	};
+};
 
 
 
@@ -35,7 +32,7 @@ void write_char(char ch,int pos);
 /**
 * Writes a whole string to the screen, if it's longer than 6 elements then it will wrap around
 * @param char* ch the string that is to be written to screen
-* @param first_pos the on which segment the string should be started 
+* @param first_pos the on which segment the string should be started
 * @return 0 if success
 **/
 void write_string(char* ch, int first_pos);

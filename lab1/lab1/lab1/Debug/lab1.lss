@@ -500,7 +500,7 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
  360:	ec 16       	cp	r14, r28
  362:	fd 06       	cpc	r15, r29
  364:	18 f0       	brcs	.+6      	; 0x36c <check_interrupts+0x36>
-	{	
+	{
 		target_time=time;
 		toggle_led_2();
  366:	0e 94 3c 01 	call	0x278	; 0x278 <toggle_led_2>
@@ -508,7 +508,7 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
 	
 	// Catches wrap around condition
 	if( time >= target_time && !(( prev_time > target_time && time > prev_time ) || time < target_time ))
-	{	
+	{
 		target_time=time;
  36a:	e7 01       	movw	r28, r14
 		toggle_led_2();
@@ -553,7 +553,7 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
 	}
 	// Return target time
 	return target_time;
-		
+	
 }
  39a:	ce 01       	movw	r24, r28
  39c:	df 91       	pop	r29
@@ -611,9 +611,9 @@ void task_4(void){
  3f2:	9f 83       	std	Y+7, r25	; 0x07
  3f4:	a8 87       	std	Y+8, r26	; 0x08
  3f6:	b9 87       	std	Y+9, r27	; 0x09
-    
-	while(1) 
-    {	
+	
+	while(1)
+	{
 		// Calculate the next prime
 		next_prime(&num);
  3f8:	ce 01       	movw	r24, r28
@@ -657,7 +657,7 @@ void task_4(void){
  434:	88 85       	ldd	r24, Y+8	; 0x08
  436:	99 85       	ldd	r25, Y+9	; 0x09
  438:	0e 94 d5 00 	call	0x1aa	; 0x1aa <write_long>
-    }
+	}
  43c:	dd cf       	rjmp	.-70     	; 0x3f8 <task_4+0x4e>
 
 0000043e <main>:

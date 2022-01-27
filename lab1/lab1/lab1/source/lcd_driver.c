@@ -1,5 +1,3 @@
-
-
 // Notes
 // 0x78 seems to controll lower segment of segment 5
 #include "../include/lcd_driver.h"
@@ -22,11 +20,11 @@ long dict_arr[] = {
 
 void write_char(char ch,int pos){
 	if(pos < 0 || pos > 5)
-		return;
-		
-	uint16_t num = 0x0;									// Assumes char is not in range
-	uint8_t *first_address = (uint8_t *)0xEC;			// Sets the frist address accessed to LCDDR0 i.e. 0xEC
-	volatile uint8_t *address = first_address+(pos>>1); // Add the offset to the address, offset by pos divided by 2 floored
+	return;
+	// Predefine num
+	uint16_t num = 0x0;
+	uint8_t *first_address = (uint8_t *)0xEC;
+	volatile uint8_t *address = first_address+(pos>>1);
 	// Clear the segment
 	// Set num to a value if exists in array
 	if(ch>=48&& ch<=57){
@@ -35,9 +33,9 @@ void write_char(char ch,int pos){
 	
 	
 	for( int i= 0; i < 4; i++){
-		// Always grab the lowest 4 bits of the char as nibble 
+		// Always grab the lowest 4 bits of the char as nibble
 		uint8_t nibble = num&0xf;
-		num>>=4;	
+		num>>=4;
 		
 		
 		if(pos%2==0)
@@ -72,52 +70,52 @@ void write_string(char* ch, int first_pos){
 /* I do however feel that this is its most readable form*/
 /************************************************************************/
 void init_lcd(void){
-		
-		
-		//-----------------------------------
-		// Status manipulation
-		//-----------------------------------
-		
-		// enabling the lcd
-		LCDCRA = LCDCRA|(1<<LCDEN);
-		// Setting low power wave form
-		LCDCRA = LCDCRA|(1<<LCDAB);
-		// disabling the interrupt
-		LCDCRA = LCDCRA&(~(1<<LCDIF));
-		// Disabling blanking
-		LCDCRA = LCDCRA&(~(1));
-		
-		
-		//-----------------------------------
-		// Clock manipulation
-		//-----------------------------------
-		
-		// setting the clock source to external
-		LCDCRB = LCDCRB|(1<<LCDCS);
-		// Setting Bias
-		LCDCRB = LCDCRB&(~(1<<LCD2B));
-		// Setting duty cycle
-		LCDCRB = LCDCRB|((3<<LCDMUX0));
-		// Setting number of active segments to 25
-		LCDCRB = LCDCRB|(7);
-		
-		
-		//-----------------------------------
-		// Frame rate manipulation
-		//-----------------------------------
-		// Set n = 16
-		LCDFRR = LCDFRR&(~(7<<LCDPS0));
-		// Set D = 8
-		LCDFRR = LCDFRR|(7);
-		
-		
-		//-----------------------------------
-		// Contrast manipulation
-		//-----------------------------------
-		// Setting msb->msb-2 to 0 to set drive time to 300 us
-		LCDCCR = LCDCCR&(~(7<< LCDDC0));
-		// Setting lsb -> lsb+3 to 1 to set voltage to 3.35V 
-		LCDCCR = LCDCCR|((15));
+	
+	
+	//-----------------------------------
+	// Status manipulation
+	//-----------------------------------
+	
+	// enabling the lcd
+	LCDCRA = LCDCRA|(1<<LCDEN);
+	// Setting low power wave form
+	LCDCRA = LCDCRA|(1<<LCDAB);
+	// disabling the interrupt
+	LCDCRA = LCDCRA&(~(1<<LCDIF));
+	// Disabling blanking
+	LCDCRA = LCDCRA&(~(1));
+	
+	
+	//-----------------------------------
+	// Clock manipulation
+	//-----------------------------------
+	
+	// setting the clock source to external
+	LCDCRB = LCDCRB|(1<<LCDCS);
+	// Setting Bias
+	LCDCRB = LCDCRB&(~(1<<LCD2B));
+	// Setting duty cycle
+	LCDCRB = LCDCRB|((3<<LCDMUX0));
+	// Setting number of active segments to 25
+	LCDCRB = LCDCRB|(7);
+	
+	
+	//-----------------------------------
+	// Frame rate manipulation
+	//-----------------------------------
+	// Set n = 16
+	LCDFRR = LCDFRR&(~(7<<LCDPS0));
+	// Set D = 8
+	LCDFRR = LCDFRR|(7);
+	
+	
+	//-----------------------------------
+	// Contrast manipulation
+	//-----------------------------------
+	// Setting msb->msb-2 to 0 to set drive time to 300 us
+	LCDCCR = LCDCCR&(~(7<< LCDDC0));
+	// Setting lsb -> lsb+3 to 1 to set voltage to 3.35V
+	LCDCCR = LCDCCR|((15));
 }
 
 
@@ -134,16 +132,16 @@ int is_prime(long num){
 	
 	// base cases 0-3
 	if (num <= 3)
-		return 1;
+	return 1;
 	// base case num is even
 	if(num%2 == 0)
-		return 0;
+	return 0;
 	// Start on 3
 	long counter = 3;
 	// Only check numbers up to half of num
 	while(counter <num){
 		if(num%counter == 0)
-			return 0;
+		return 0;
 		counter++;
 	}
 	return 1;
@@ -156,12 +154,12 @@ void primes(){
 	{
 		if(num >= 3){
 			if (num % 2 == 0)
-				num++;
-			else
-				num +=2;	
-		}
-		else 
 			num++;
+			else
+			num +=2;
+		}
+		else
+		num++;
 		if(is_prime(num)==1){
 			write_long(num);
 		}
@@ -172,10 +170,10 @@ void primes(){
 void toggle_led(){
 	// If the segment is on turn it of
 	if((LCDDR0&2)>>1== 0)
-		LCDDR0 = LCDDR0|2;
+	LCDDR0 = LCDDR0|2;
 	// Else turn it on
 	else
-		LCDDR0= LCDDR0^2;
+	LCDDR0= LCDDR0^2;
 }
 int blink(){
 	uint16_t freq = 31250/2;		// The segment should turn on and of every half cycle i.e. flicker with 2 Hz frequency
@@ -216,12 +214,7 @@ void toggle_led_2(){
 void blink_2(){
 	
 	if((LCDDR8&1)== 0)
-		LCDDR8 = LCDDR8|2;
+	LCDDR8 = LCDDR8|2;
 	else
-		LCDDR8= LCDDR8^2;
+	LCDDR8= LCDDR8^2;
 }
-
-
-
-
-
