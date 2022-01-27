@@ -66,15 +66,8 @@ void next_prime(long *num){
 	{
 		// If number i smaller than 3, increment by 1
 		// Else increment by 2 if the number is odd, else increment by 1
-		if(*num >= 3){
-			if (*num%2 == 0)
-			*num++;
-			else
-			*num +=2;
-		}
-		else{
-			*num++;
-		}
+		*num+=1;
+			
 		// Check if new number is a prime number
 		if(is_prime(*num)==1){
 			return;
@@ -144,7 +137,7 @@ void task_4(void){
 	volatile uint16_t target_time = TCNT1+freq;					// Target time, will wrap around just like the timer
 	volatile uint16_t last_time = target_time-freq;				// Last time the timer triggered, useful to look for overflows
 	uint8_t buttonstate = 1;									// Tracks button actions, event triggers on 3
-	long num = 1;												// Last number checked
+	long num = 0;												// Last number checked
 	
 	while(1)
 	{
