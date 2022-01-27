@@ -20,14 +20,14 @@ enum ERROR{
 * @param ch the character that is to be written on screen
 * @param pos the position on screen [0,1,...,5]
 **/
-void init_lcd ();
+int init_lcd ();
 
 /**
 * Writes a character to the given position on screen.
 * @param ch the character that is to be written on screen
 * @param pos the position on screen [0,1,...,5]
 **/
-void write_char(char ch,int pos);
+int write_char(char ch,int pos);
 
 /**
 * Writes a whole string to the screen, if it's longer than 6 elements then it will wrap around
@@ -35,7 +35,7 @@ void write_char(char ch,int pos);
 * @param first_pos the on which segment the string should be started
 * @return 0 if success
 **/
-void write_string(char* ch, int first_pos);
+int write_string(char* ch, int first_pos);
 
 /**
 * Checks if a number is a prime number
@@ -51,7 +51,7 @@ void primes();
 /**
 * Toggles a segment on the display
 **/
-void toggle_led();
+int toggle_led();
 /**
 * Writes a long to the lcd display
 * @param num the number to be displayed
@@ -62,6 +62,6 @@ void write_long(long num);
 /************************************************************************/
 /*					Modified functions for part 4						*/
 /************************************************************************/
-void toggle_led_2();
-void blink_2();
+int toggle_led_2();
+int blink_2();
 #endif /* LCD_DRIVER_H_ */
