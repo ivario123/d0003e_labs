@@ -81,7 +81,7 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
 	uint16_t time = (uint16_t)TCNT1;
 	
 	// Catches wrap around condition
-	if(target_time < time && !((prev_time>target_time&& time>prev_time)||time < target_time))
+	if( time >= target_time && !(( prev_time > target_time && time > prev_time ) || time < target_time ))
 	{	
 		target_time=time;
 		toggle_led_2();
@@ -115,7 +115,8 @@ void task_4(void){
 	volatile uint16_t last_time = target_time-freq;				// Last time the timer triggered, useful to look for overflows
 	uint8_t buttonstate = 1;									// Tracks button actions, event triggers on 3
 	long num = 1;												// Last number checked
-    while(1) 
+    
+	while(1) 
     {	
 		// Calculate the next prime
 		next_prime(&num);

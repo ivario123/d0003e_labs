@@ -22,7 +22,7 @@ long dict_arr[] = {
 
 void write_char(char ch,int pos){
 	if(pos < 0 || pos > 5)
-		return 0;
+		return;
 	// Predefine num
 	uint16_t num = 0x0;
 	uint8_t *first_address = (uint8_t *)0xEC;
