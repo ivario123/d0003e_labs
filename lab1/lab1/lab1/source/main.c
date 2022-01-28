@@ -19,7 +19,7 @@ void init(void){
 	// Setting power options
 	CLKPR = 0x80;
 	CLKPR = 0X00;
-	
+	int i = 0;
 	
 	// Setting the pre-sacling factor to 256
 	TCCR1B = TCCR1B|TIMER_SCALING_256;
