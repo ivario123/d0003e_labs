@@ -53,18 +53,18 @@ void init_lcd(void){
 	// Setting Bias
 	LCDCRB = LCDCRB&(~(1<<LCD2B));
 	// Setting duty cycle
-	LCDCRB = LCDCRB|((3<<LCDMUX0));
+	LCDCRB = LCDCRB|((0b11<<LCDMUX0));
 	// Setting number of active segments to 25
-	LCDCRB = LCDCRB|(7);
+	LCDCRB = LCDCRB|(0b111);
 	
 	
 	//-----------------------------------
 	// Frame rate manipulation
 	//-----------------------------------
 	// Set n = 16
-	LCDFRR = LCDFRR&(~(7<<LCDPS0));
+	LCDFRR = LCDFRR&(~(0b111<<LCDPS0));
 	// Set D = 8
-	LCDFRR = LCDFRR|(7);
+	LCDFRR = LCDFRR|(0b111);
 	
 	
 	//-----------------------------------
@@ -93,13 +93,9 @@ void write_char(char ch,int pos){
 	if(ch>=48&& ch<=57){
 		num = dict_arr[ch-48];
 	}
-	// Else it will clear the segment by writing 0 to it
 	
-	// Loop over every nibble i.e. 4 itterations
 	for( int i= 0; i < 4; i++){
-		// Always grab the lowest 4 bits of the char as nibble
 		uint8_t nibble = num&0xf;
-		// Remove lsb-lsb+4
 		num>>=4;
 		
 		// Check if pos is even or odd
@@ -141,15 +137,28 @@ void write_string(char* ch, int first_pos){
 
 
 void write_long(long num){
-	// Writes a long int to the display
-	int temp; // Temporary int buffer
-	six_least_significant(num,&temp);
-	// Declare a 7 character buffer to store the char representation of the number
-	char buffer[7];
-	// Convert the int to a string
-	int_to_str(temp,buffer);
-	// Write the string to the display
-	write_string(buffer,0);
+	int pos = 5;
+	if(num == 0){
+		write_char(48,5);
+		for(int i = 0; i <=4; i++){
+			write_char(0,i);
+		}
+		return;
+	}
+	while(num && pos >= 0){
+		//if(num == 0 && pos != 5)
+		//	break;
+		volatile char buffer[2];
+		volatile int temp_num = num-(num/10)*10;
+		num = num/10;
+		int_to_str(temp_num,&buffer);
+		write_char(buffer[0],pos);
+		pos--;
+	}
+	while(pos>=0){
+		write_char(0,pos);
+		pos--;
+	}
 }
 
 

@@ -103,6 +103,8 @@ int check_interrupts(uint16_t target_time,uint16_t prev_time,uint8_t *buttonstat
 		// If in valid range
 		if((prev_time > target_time&& time <= prev_time)|| target_time > prev_time)
 		{    
+			
+			toggle_led_2();
 			// Register a timer event
 			target_time=time;
 		}
@@ -144,12 +146,11 @@ void task_4(void){
 		// Calculate the next prime
 		next_prime(&num);
 		// Check if any interrupts have been triggered
-		if(target_time != check_interrupts(target_time,last_time,&buttonstate)){
-			
-			toggle_led_2();
+		uint16_t new_time = check_interrupts(target_time,last_time,&buttonstate);
+		if(target_time != new_time ){
 			// uints wrap around in the same way as the timer reg
-			last_time = target_time;
-			target_time+=freq;
+			last_time = new_time;
+			target_time=last_time+freq;
 		}
 		
 		
@@ -164,6 +165,13 @@ int main(void)
 {
 	init();
 	init_lcd();
+	
+	
+	//write_char('3',5);
+	//write_long(1234);
+	//write_long(1234);
+	//write_long(0);
+	//write_long((long)123456789);
 	//write_char('1',0);
 	//write_char('4',1);
 	//write_char('0',1);
