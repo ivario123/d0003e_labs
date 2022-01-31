@@ -38,8 +38,11 @@ static void initialize(void) {
 	EIMSK = EIMSK | 1<<7|1;
 	PCMSK1 = PCMSK1|1<<7;
 	
-	// Setting timer int
+	// Setting timer int enabled, comment this out to run task 1
 	TIMSK1 = TIMSK1|2;
+	
+	
+	
 	uint16_t * target_time = (uint16_t *)0x88;
 	*target_time = 391;						// Approximate form of 50ms in clock cycles * 1024
 	
@@ -132,10 +135,41 @@ ISR(TIMER1_COMPA_vect){
 }
 
 void lock(mutex *m) {
-
+	DISABLE();
+	if(m->locked==0){
+		m->locked = 1;
+		ENABLE();
+		return;
+	}
+	else{
+		enqueue(current,&(m->waitQ));
+		if(readyQ!=NULL)
+			dispatch(dequeue(&readyQ));
+		else
+			dispatch(&(m->waitQ));
+	}	
+	ENABLE();
 }
 
 void unlock(mutex *m) {
+	DISABLE();
+	if(m->locked==0){
+		ENABLE();
+		return;
+	}
+	enqueue(current,&readyQ);
+	if(m->waitQ!=NULL){
+		ENABLE();
+		dispatch(dequeue(&(m->waitQ)));
+	}
+	else{
+		m->locked = 0;
+		ENABLE();
+		dispatch(dequeue(&readyQ));
+		
+		
+	}
+	return;
 
 }
 
