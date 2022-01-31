@@ -35,7 +35,6 @@ void computePrimes(int pos) {
 
 
 int main() {
-	init();
 	init_lcd();
     spawn(computePrimes, 0);
     computePrimes(3);

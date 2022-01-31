@@ -32,6 +32,17 @@ int initialized = 0;
 static void initialize(void) {
 	// Setting a pointer to timer 1 reg
 	volatile uint16_t * timer = (uint16_t *)0x84;
+	
+	// Setting power options
+	CLKPR = 0x80;
+	CLKPR = 0X00;
+	
+	// Setting the pre-scaling factor to 256
+	TCCR1B = TCCR1B|TIMER_SCALING_1024;
+	
+	// Setting the pull up
+	PORTB = PORTB|(1<<7);
+	
 	// Enabling interrupts
 	MCUSR = MCUSR|1<<7;
 	EICRA = EICRA|3;
@@ -124,8 +135,7 @@ void yield(void) {
 ISR(PCINT1_vect) {
 	// Yield only on press, not release
 	if(0==(PINB&(1<<7))>>7)
-		yield();
-	//code for interrupt handler
+		yield();	
 }
 
 ISR(TIMER1_COMPA_vect){
@@ -137,56 +147,38 @@ ISR(TIMER1_COMPA_vect){
 void lock(mutex *m) {
 	DISABLE();
 	if(m->locked==0){
+		// Mutex is free, just lock and return
 		m->locked = 1;
-		ENABLE();
-		return;
 	}
 	else{
+		// Mutex is not free, wait until it is free
 		enqueue(current,&(m->waitQ));
 		if(readyQ!=NULL)
 			dispatch(dequeue(&readyQ));
-		else
-			dispatch(&(m->waitQ));
+		else{
+			volatile int i = 0;
+			while(i!=1);			// Deadlocked because of mutex
+		}
 	}	
 	ENABLE();
 }
 
 void unlock(mutex *m) {
 	DISABLE();
-	if(m->locked==0){
-		ENABLE();
-		return;
+	if(m->locked!=0){
+		enqueue(current,&readyQ);
+		if(m->waitQ!=NULL){
+			ENABLE();
+			dispatch(dequeue(&(m->waitQ)));
+		}
+		else{
+			m->locked = 0;
+			ENABLE();
+			dispatch(dequeue(&readyQ));
+		}
 	}
-	enqueue(current,&readyQ);
-	if(m->waitQ!=NULL){
-		ENABLE();
-		dispatch(dequeue(&(m->waitQ)));
-	}
-	else{
-		m->locked = 0;
-		ENABLE();
-		dispatch(dequeue(&readyQ));
-		
-		
-	}
+	ENABLE();
 	return;
 
-}
-
-
-void init(void){
-	// Setting power options
-	CLKPR = 0x80;
-	CLKPR = 0X00;
-	
-	// Setting the pre-scaling factor to 256
-	TCCR1B = TCCR1B|TIMER_SCALING_1024;
-	
-	
-	
-	
-	
-	// Setting the pull up
-	PORTB = PORTB|(1<<7);
 }
 
