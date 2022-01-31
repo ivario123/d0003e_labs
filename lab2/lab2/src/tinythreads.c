@@ -31,7 +31,7 @@ int initialized = 0;
 
 static void initialize(void) {
 	// Setting a pointer to timer 1 reg
-	uint16_t * timer = (uint16_t *)0x84;
+	volatile uint16_t * timer = (uint16_t *)0x84;
 	// Enabling interrupts
 	MCUSR = MCUSR|1<<7;
 	EICRA = EICRA|3;
@@ -39,8 +39,9 @@ static void initialize(void) {
 	PCMSK1 = PCMSK1|1<<7;
 	
 	// Setting timer int
-	
-	ENABLE();
+	TIMSK1 = TIMSK1|2;
+	uint16_t * target_time = (uint16_t *)0x88;
+	*target_time = 391;						// Approximate form of 50ms in clock cycles * 1024
 	
 	
 	ENABLE();
@@ -125,6 +126,8 @@ ISR(PCINT1_vect) {
 }
 
 ISR(TIMER1_COMPA_vect){
+	volatile uint16_t * timer = (uint16_t *)0x84;
+	*timer = 0;
 	yield();
 }
 
