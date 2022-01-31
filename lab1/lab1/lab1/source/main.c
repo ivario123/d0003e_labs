@@ -20,7 +20,7 @@ void init(void){
 	CLKPR = 0x80;
 	CLKPR = 0X00;
 	
-	// Setting the pre-sacling factor to 256
+	// Setting the pre-scaling factor to 256
 	TCCR1B = TCCR1B|TIMER_SCALING_256;
 	
 	// Setting the pull up
