@@ -50,7 +50,7 @@ static void initialize(void) {
 	PCMSK1 = PCMSK1|1<<7;
 	
 	// Setting timer int enabled, comment this out to run task 1
-	TIMSK1 = TIMSK1|2;
+	//TIMSK1 = TIMSK1|2;
 	
 	
 	

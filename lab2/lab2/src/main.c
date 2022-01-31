@@ -16,10 +16,18 @@ void printAt(long num, int pos) {
     write_char( (num % 100) / 10 + '0', pp);
 	unlock(&pp_mutex);
 	for(int i = 0; i <1000; i++);
-	pp = pos+1;
 	lock(&pp_mutex);
+	pp = pos+1;
     write_char( num % 10 + '0', pp);
 	unlock(&pp_mutex);
+}
+
+void printAt_task1(long num, int pos) {
+	int pp_1 = pos;
+    write_char( (num % 100) / 10 + '0', pp_1);
+	for(int i = 0; i <1000; i++);
+	pp_1 = pos+1;
+    write_char( num % 10 + '0', pp_1);
 }
 
 void computePrimes(int pos) {
@@ -27,7 +35,8 @@ void computePrimes(int pos) {
 	
     for(n = 1; ; n++) {
         if (is_prime((long)n)) {
-            printAt(n, pos);
+			printAt_task1(n,pos);
+            //printAt(n, pos);
 			//yield();
         }
     }
