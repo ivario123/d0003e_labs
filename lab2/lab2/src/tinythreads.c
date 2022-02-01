@@ -49,16 +49,15 @@ static void initialize(void) {
 	EIMSK = EIMSK | 1<<7|1;
 	PCMSK1 = PCMSK1|1<<7;
 	
-	// Setting timer int enabled, comment this out to run task 1
-	//TIMSK1 = TIMSK1|2;
+	// Setting timer int enabled
+	TIMSK1 = TIMSK1|2;
 	
 	
 	
 	uint16_t * target_time = (uint16_t *)0x88;
-	*target_time = 391;						// Approximate form of 50ms in clock cycles * 1024
+	*target_time = 391;												// Approximate form of 50ms in clock cycles * 1024
 	
 	
-	ENABLE();
     int i;
     for (i=0; i<NTHREADS-1; i++)
         threads[i].next = &threads[i+1];
@@ -68,6 +67,7 @@ static void initialize(void) {
 	*timer = 0;
 
     initialized = 1;
+	ENABLE();
 }
 
 static void enqueue(thread p, thread *queue) {
@@ -124,11 +124,13 @@ void spawn(void (* function)(int), int arg) {
 }
 
 void yield(void) {
-	// Pluck the first thread from the queue
-	// Enqueue the thread that was plucked
-	enqueue(current,&readyQ);
-	// Dequeue and execute next thread
-	dispatch(dequeue(&readyQ));
+	if(readyQ!=NULL){
+		// Pluck the first thread from the queue
+		// Enqueue the thread that was plucked
+		enqueue(current,&readyQ);
+		// Dequeue and execute next thread
+		dispatch(dequeue(&readyQ));
+	}
 }
 
 
@@ -178,7 +180,5 @@ void unlock(mutex *m) {
 		}
 	}
 	ENABLE();
-	return;
-
 }
 
