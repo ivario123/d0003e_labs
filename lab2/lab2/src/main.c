@@ -15,7 +15,7 @@ void printAt(long num, int pos) {
 	lock(&pp_mutex);
 	pp = pos; 
     write_char((num % 100) / 10 + '0', pp);
-	for(int i = 0; i <1000; i++);
+	for(volatile int i = 0; i <10000; i++);
 	pp++;
     write_char( num % 10 + '0', pp);
 	unlock(&pp_mutex);

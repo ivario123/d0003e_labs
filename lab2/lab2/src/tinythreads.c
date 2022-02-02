@@ -38,16 +38,17 @@ static void initialize(void) {
 	CLKPR = 0X00;
 	
 	// Setting the pre-scaling factor to 256
-	TCCR1B = TCCR1B|TIMER_SCALING_1024;
+	TCCR1B = TCCR1B | TIMER_SCALING_1024;
 	
 	// Setting the pull up
-	PORTB = PORTB|(1<<7);
+	PORTB = PORTB   | (1<<7);
 	
 	// Enabling interrupts
-	MCUSR = MCUSR|1<<7;
-	EICRA = EICRA|3;
-	EIMSK = EIMSK | 1<<7|1;
-	PCMSK1 = PCMSK1|1<<7;
+	MCUSR = MCUSR   | 1<<7;
+	EICRA = EICRA   | 3;
+	
+	EIMSK = EIMSK   | 1<<7 | 1;
+	PCMSK1 = PCMSK1 | 1<<7;
 	
 	// Setting timer int enabled
 	TIMSK1 = TIMSK1|2;
@@ -124,13 +125,13 @@ void spawn(void (* function)(int), int arg) {
 }
 
 void yield(void) {
-	if(readyQ!=NULL){
-		// Pluck the first thread from the queue
-		// Enqueue the thread that was plucked
-		enqueue(current,&readyQ);
-		// Dequeue and execute next thread
-		dispatch(dequeue(&readyQ));
-	}
+	DISABLE();
+	// Pluck the first thread from the queue
+	// Enqueue the thread that was plucked
+	enqueue(current,&readyQ);
+	// Dequeue and execute next thread
+	dispatch(dequeue(&readyQ));
+	ENABLE();
 }
 
 
@@ -155,12 +156,7 @@ void lock(mutex *m) {
 	else{
 		// Mutex is not free, wait until it is free
 		enqueue(current,&(m->waitQ));
-		if(readyQ!=NULL)
-			dispatch(dequeue(&readyQ));
-		else{
-			volatile int i = 0;
-			while(i!=1);			// Deadlocked because of mutex
-		}
+		dispatch(dequeue(&readyQ));
 	}	
 	ENABLE();
 }
@@ -170,12 +166,10 @@ void unlock(mutex *m) {
 	if(m->locked!=0){
 		enqueue(current,&readyQ);
 		if(m->waitQ!=NULL){
-			ENABLE();
 			dispatch(dequeue(&(m->waitQ)));
 		}
 		else{
 			m->locked = 0;
-			ENABLE();
 			dispatch(dequeue(&readyQ));
 		}
 	}
