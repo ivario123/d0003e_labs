@@ -1,0 +1,20 @@
+################################################################################
+# Automatically-generated file. Do not edit or delete the file
+################################################################################
+
+part1\src\lcd_driver.c
+
+part1\src\main1.c
+
+part1\src\string.c
+
+part1\src\tinythreads.c
+
+part2\src\lcd_driver.c
+
+part2\src\main2.c
+
+part2\src\string.c
+
+part2\src\tinythreads.c
+
