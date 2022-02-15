@@ -1,5 +1,3 @@
-#ifndef MYTEST_C
-#define MYTEST_C
 #include "../include/lcd_driver.h"
 #include <avr/interrupt.h>
 #include <stdbool.h>
@@ -61,15 +59,18 @@ ISR(TIMER1_COMPA_vect){
 	reset_timer();
 	spawn(blink,0);
 }
+void bussy_task(){
+	while(1);
+}
 int main() {
 	LCDDR13 = LCDDR13|1;
 	init_lcd();
 	uint16_t * target_time = (uint16_t *)0x88;
 	
-	*target_time = 3906;												// Approximate form of 50ms in clock cycles * 
+	*target_time = 3906;												// Approximate form of .5s in clock cycles * 
 	// reseting timer
 	*timer = 0;
 	spawn(computePrimes,0);
-	return 0;
+	spawn(bussy_task,0);
+	
 }
-#endif

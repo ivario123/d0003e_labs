@@ -175,13 +175,3 @@ int is_prime(long num){
 void toggle_led(void){
 	LCDDR8= LCDDR8^1;
 }
-void blink(void){
-	uint16_t freq = 31250/2;
-	uint16_t last_time = TCNT1;
-	while(1){
-		while(get_timer_int_counter() < 10);
-		reset_timer_int_counter();
-		last_time =(uint16_t)TCNT1;
-		toggle_led();
-	}
-}

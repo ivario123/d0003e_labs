@@ -101,29 +101,7 @@ static void dispatch(thread next) {
         longjmp(next->context,1);
     }
 }
-void spawn_no_arg(void (*function)())
-{
-	thread newp;
 
-    DISABLE();
-    if (!initialized) initialize();
-
-    newp = dequeue(&freeQ);
-    newp->function = function;
-    newp->arg = NULL;
-    newp->next = NULL;
-    if (setjmp(newp->context) == 1) {
-        ENABLE();
-        current->function;
-        DISABLE();
-        enqueue(current, &freeQ);
-        dispatch(dequeue(&readyQ));
-    }
-    SETSTACK(&newp->context, &newp->stack);
-
-    enqueue(newp, &readyQ);
-    ENABLE();
-}
 void spawn(void (* function)(int), int arg) {
     thread newp;
 
@@ -157,13 +135,7 @@ void yield(void) {
 	ENABLE();
 }
 
-/**
-ISR(PCINT1_vect) {
-	// Yield only on press, not release
-	if(0==(PINB&(1<<7))>>7)
-		yield();	
-}
-**/
+
 
 ISR(TIMER1_COMPA_vect){
 	timer_int_counter++;

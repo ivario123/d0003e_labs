@@ -58,6 +58,5 @@ void write_long(long num);
 /**
 * Blinks a led segment every half second
 **/
-void blink(void);
 void swap_segment(void);
 #endif /* LCD_DRIVER_H_ */
