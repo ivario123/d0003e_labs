@@ -48,7 +48,7 @@ C_SRCS +=  \
 ../part1/src/string.c \
 ../part1/src/tinythreads.c \
 ../part2/src/lcd_driver.c \
-../part2/src/main2.c \
+../part2/src/main.c \
 ../part2/src/string.c \
 ../part2/src/tinythreads.c
 
@@ -65,7 +65,7 @@ part1/src/main1.o \
 part1/src/string.o \
 part1/src/tinythreads.o \
 part2/src/lcd_driver.o \
-part2/src/main2.o \
+part2/src/main.o \
 part2/src/string.o \
 part2/src/tinythreads.o
 
@@ -75,7 +75,7 @@ part1/src/main1.o \
 part1/src/string.o \
 part1/src/tinythreads.o \
 part2/src/lcd_driver.o \
-part2/src/main2.o \
+part2/src/main.o \
 part2/src/string.o \
 part2/src/tinythreads.o
 
@@ -85,7 +85,7 @@ part1/src/main1.d \
 part1/src/string.d \
 part1/src/tinythreads.d \
 part2/src/lcd_driver.d \
-part2/src/main2.d \
+part2/src/main.d \
 part2/src/string.d \
 part2/src/tinythreads.d
 
@@ -95,7 +95,7 @@ part1/src/main1.d \
 part1/src/string.d \
 part1/src/tinythreads.d \
 part2/src/lcd_driver.d \
-part2/src/main2.d \
+part2/src/main.d \
 part2/src/string.d \
 part2/src/tinythreads.d
 
@@ -148,7 +148,7 @@ part2/src/lcd_driver.o: ../part2/src/lcd_driver.c
 	@echo Finished building: $<
 	
 
-part2/src/main2.o: ../part2/src/main2.c
+part2/src/main.o: ../part2/src/main.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega169p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\gcc\dev\atmega169p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

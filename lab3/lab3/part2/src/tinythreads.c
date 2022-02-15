@@ -2,7 +2,6 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "../include/tinythreads.h"
-
 #define NULL            0
 #define DISABLE()       cli()
 #define ENABLE()        sei()
@@ -78,7 +77,7 @@ static void enqueue(thread p, thread *queue) {
     } else {
         thread q = *queue;
         while (q->next)
-            q = q->next;
+        q = q->next;
         q->next = p;
     }
 }

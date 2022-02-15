@@ -1,17 +1,11 @@
 #include "../include/lcd_driver.h"
+#include <avr/interrupt.h>
 #define CLOCK_SPEED 8000000  				// The clock speed in Hz
 #define REFRESH_RATE 31250					// A second measured in bits of the timer register
 
 
-ISR(PCINT1_vect) {
-	// Yield only on press, not release
-	unlock(&button_mutex);
-	return 0;
-}
-ISR(TIMER1_COMPA_vect){
-	unlock(&blink_mutex);
-	return 0;
-}
+
+
 // Our dictionary
 long dict_arr[] = {
 	0x1551,				// Represents 0
@@ -32,8 +26,6 @@ long dict_arr[] = {
 /*								TASK 1									*/
 /************************************************************************/
 void init_lcd(void){
-	
-	
 	//-----------------------------------
 	// Status manipulation
 	//-----------------------------------
@@ -82,7 +74,7 @@ void init_lcd(void){
 
 void write_char(char ch,int pos){
 	if(pos < 0 || pos > 5)
-		return;
+	return;
 	uint16_t num = 0x0;
 	uint8_t *address = (uint8_t *)(0xEC+(pos>>1));
 	
@@ -95,7 +87,7 @@ void write_char(char ch,int pos){
 		num>>=4;
 		
 		if(pos%2==0)
-		{	
+		{
 			*address = (*address)&0xf0;
 			*address = (*address)|nibble;
 		}
@@ -118,7 +110,7 @@ void write_string(char* ch, int first_pos){
 			ch++;
 		}
 		else
-			write_char(' ',i);	
+		write_char(' ',i);
 	}
 }
 
@@ -157,11 +149,7 @@ void write_long(long num){
 /************************************************************************/
 /*							HELPER SECTION                              */
 /************************************************************************/
-void button(void){
-		lock(&button_mutex);
-		if(0==(PINB&(1<<7))>>7)
-			swap_segment();
-}
+
 void swap_segment(void){
 	
 	LCDDR13 = LCDDR13^1;
@@ -188,10 +176,4 @@ int is_prime(long num){
 
 void toggle_led(void){
 	LCDDR8= LCDDR8^1;
-}
-void blink(void){
-	lock(&blink_mutex);
-	while(get_timer_int_counter()< 10);
-	toggle_led();
-	reset_timer_int_counter();
 }

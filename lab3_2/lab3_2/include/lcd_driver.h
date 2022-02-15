@@ -8,11 +8,6 @@
 #include "tinythreads.h"
 #include <stdint-gcc.h>
 #include <avr/io.h>
-
-mutex blink_mutex = MUTEX_INIT;
-mutex button_mutex = MUTEX_INIT;
-
-
 /**
 * Initiates the lcd screen with predefined parameters
 * @param ch the character that is to be written on screen
@@ -56,7 +51,5 @@ void write_long(long num);
 /**
 * Blinks a led segment every half second
 **/
-void blink(void);
 void swap_segment(void);
-void button(void);
 #endif /* LCD_DRIVER_H_ */
