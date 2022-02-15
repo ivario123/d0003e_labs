@@ -11,6 +11,7 @@
 #define SETSTACK(buf,a) *((unsigned int *)(buf)+8) = (unsigned int)(a) + STACKSIZE - 4; \
                         *((unsigned int *)(buf)+9) = (unsigned int)(a) + STACKSIZE - 4
 uint16_t timer_int_counter = 0;
+volatile uint16_t * timer = (uint16_t *)0x84;
 struct thread_block {
     void (*function)(int);   // code to run
     int arg;                 // argument to the above
@@ -156,15 +157,15 @@ void yield(void) {
 	ENABLE();
 }
 
-
+/**
 ISR(PCINT1_vect) {
 	// Yield only on press, not release
 	if(0==(PINB&(1<<7))>>7)
 		yield();	
 }
+**/
 
 ISR(TIMER1_COMPA_vect){
-	volatile uint16_t * timer = (uint16_t *)0x84;
 	timer_int_counter++;
 	*timer = 0;
 	yield();

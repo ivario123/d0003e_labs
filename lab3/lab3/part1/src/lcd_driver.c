@@ -147,13 +147,7 @@ void write_long(long num){
 /************************************************************************/
 /*							HELPER SECTION                              */
 /************************************************************************/
-void button(void){
-	while(1){
-		while(1==(PINB&(1<<7))>>7);
-		while(0==(PINB&(1<<7))>>7);
-		swap_segment();
-	}
-}
+
 void swap_segment(void){
 	
 	LCDDR13 = LCDDR13^1;
@@ -185,9 +179,9 @@ void blink(void){
 	uint16_t freq = 31250/2;
 	uint16_t last_time = TCNT1;
 	while(1){
-		while(get_timer_int_counter()< 10);
+		while(get_timer_int_counter() < 10);
+		reset_timer_int_counter();
 		last_time =(uint16_t)TCNT1;
 		toggle_led();
-		reset_timer_int_counter();
 	}
 }

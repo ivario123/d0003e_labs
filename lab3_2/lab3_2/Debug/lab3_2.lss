@@ -15,19 +15,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   5 .debug_aranges 00000110  00000000  00000000  0000087c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   000015f7  00000000  00000000  0000098c  2**0
+  6 .debug_info   000015ef  00000000  00000000  0000098c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000c25  00000000  00000000  00001f83  2**0
+  7 .debug_abbrev 00000c25  00000000  00000000  00001f7b  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   0000097f  00000000  00000000  00002ba8  2**0
+  8 .debug_line   0000097f  00000000  00000000  00002ba0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000360  00000000  00000000  00003528  2**2
+  9 .debug_frame  00000360  00000000  00000000  00003520  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    0000063e  00000000  00000000  00003888  2**0
+ 10 .debug_str    0000063e  00000000  00000000  00003880  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000a95  00000000  00000000  00003ec6  2**0
+ 11 .debug_loc    00000a95  00000000  00000000  00003ebe  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000000e0  00000000  00000000  0000495b  2**0
+ 12 .debug_ranges 000000e0  00000000  00000000  00004953  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -526,10 +526,6 @@ void computePrimes(int pos) {
  342:	0e 94 b9 00 	call	0x172	; 0x172 <is_prime>
  346:	89 2b       	or	r24, r25
  348:	29 f0       	breq	.+10     	; 0x354 <computePrimes+0x20>
-			//printAt_task2(n,pos);
-			//printAt_task1(n,pos);
-			//int temp = n;
-			//n_least_signigicant(n,&temp,2);
 			printAt(n, pos);
  34a:	ae 01       	movw	r20, r28
  34c:	c7 01       	movw	r24, r14
@@ -546,10 +542,8 @@ void computePrimes(int pos) {
  358:	d8 0a       	sbc	r13, r24
  35a:	e8 0a       	sbc	r14, r24
  35c:	f8 0a       	sbc	r15, r24
-			//int temp = n;
-			//n_least_signigicant(n,&temp,2);
+		if (is_prime((long)n)) {
 			printAt(n, pos);
-			//yield();
 		}
 	}
  35e:	ef cf       	rjmp	.-34     	; 0x33e <computePrimes+0xa>
@@ -625,15 +619,15 @@ int main() {
  3c8:	82 e3       	ldi	r24, 0x32	; 50
  3ca:	91 e0       	ldi	r25, 0x01	; 1
  3cc:	0e 94 dc 02 	call	0x5b8	; 0x5b8 <lock>
-	spawn(blink,(int)&blink_mutex);
- 3d0:	6a e3       	ldi	r22, 0x3A	; 58
- 3d2:	71 e0       	ldi	r23, 0x01	; 1
+	spawn(blink,0);
+ 3d0:	60 e0       	ldi	r22, 0x00	; 0
+ 3d2:	70 e0       	ldi	r23, 0x00	; 0
  3d4:	82 e0       	ldi	r24, 0x02	; 2
  3d6:	91 e0       	ldi	r25, 0x01	; 1
  3d8:	0e 94 77 02 	call	0x4ee	; 0x4ee <spawn>
-	spawn(button,(int)&button_mutex);
- 3dc:	66 e3       	ldi	r22, 0x36	; 54
- 3de:	71 e0       	ldi	r23, 0x01	; 1
+	spawn(button,0);
+ 3dc:	60 e0       	ldi	r22, 0x00	; 0
+ 3de:	70 e0       	ldi	r23, 0x00	; 0
  3e0:	80 eb       	ldi	r24, 0xB0	; 176
  3e2:	91 e0       	ldi	r25, 0x01	; 1
  3e4:	0e 94 77 02 	call	0x4ee	; 0x4ee <spawn>

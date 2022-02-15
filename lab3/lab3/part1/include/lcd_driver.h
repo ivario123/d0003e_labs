@@ -60,5 +60,4 @@ void write_long(long num);
 **/
 void blink(void);
 void swap_segment(void);
-void button(void);
 #endif /* LCD_DRIVER_H_ */

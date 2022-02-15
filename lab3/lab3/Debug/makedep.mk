@@ -4,17 +4,9 @@
 
 part1\src\lcd_driver.c
 
-part1\src\main1.c
+part1\src\main.c
 
 part1\src\string.c
 
 part1\src\tinythreads.c
-
-part2\src\lcd_driver.c
-
-part2\src\main.c
-
-part2\src\string.c
-
-part2\src\tinythreads.c
 

@@ -173,7 +173,7 @@ void blink(void){
 	uint16_t freq = 31250/2;
 	uint16_t last_time = TCNT1;
 	while(1){
-		while(((uint16_t)TCNT1)!= last_time+freq);
+		while()
 		last_time =(uint16_t)TCNT1;
 		toggle_led();
 	}

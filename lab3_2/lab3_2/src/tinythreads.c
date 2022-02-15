@@ -50,12 +50,6 @@ static void initialize(void) {
 	
 	// Setting timer int enabled
 	TIMSK1 = TIMSK1|2;
-	
-	
-	
-	
-	
-	
     int i;
     for (i=0; i<NTHREADS-1; i++)
         threads[i].next = &threads[i+1];

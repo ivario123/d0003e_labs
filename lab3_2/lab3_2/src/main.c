@@ -30,23 +30,7 @@ void computePrimes(int pos) {
 		}
 	}
 }
-void next_prime(long *num){
-	while(1)
-	{
-		*num+=1;
-		if(is_prime(*num)==1){
-			return;
-		}
-	}
-}
-void primes(void){
-	long num = 0;
-	while(1){
-		next_prime(&num);
-		write_long(num);
-	}
-	
-}
+
 void printAt(long num, int pos) {
 	
     write_char((num % 100) / 10 + '0', pos);
@@ -82,8 +66,8 @@ int main() {
 	lock(&blink_mutex);
 	lock(&button_mutex);
 	lock(&primes_mutex);
-	spawn(blink,(int)&blink_mutex);
-	spawn(button,(int)&button_mutex);
+	spawn(blink,0);
+	spawn(button,0);
 	computePrimes(0);
 	return 0;
 }
