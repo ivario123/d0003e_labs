@@ -2,12 +2,13 @@
 #define MYTEST_C
 #include "../include/tinythreads.h"
 #include "../include/lcd_driver.h"
-
+mutex print_mutex = MUTEX_INIT;
 // From lab 2
 void printAt(long num, int pos) {
-	
+	lock(&print_mutex);
     write_char((num % 100) / 10 + '0', pos);
     write_char( num % 10 + '0', pos+1);
+	unlock(&print_mutex);
 }
 // From lab 2
 void computePrimes(int pos) {
@@ -52,21 +53,22 @@ void button(int arg){
 			
 		}*/
 		// This one does not work. I don't know why
-		//uint8_t *ptr = &button_thingy;
+		//	uint8_t *ptr = &button_thingy;
 		while(1){
-			while(0 == (PINB&(1<<7))>>7);
+			while(1 == (PINB&(1<<7))>>7);
 			increment_button_thingy();
 			//*ptr = *ptr + 1;
 			printAt(get_button_thingy(),4);
-			while(1 == (PINB&(1<<7))>>7);
+			while(0 == (PINB&(1<<7))>>7);
 		}
 		
 }
 void blink(int arg){
 	while(1){
-		while(get_timer_int_counter() < 10);
-		reset_timer_int_counter();
-		toggle_led();
+		if(get_timer_int_counter() >= 10){
+			reset_timer_int_counter();
+			toggle_led();
+		}
 	}
 }
 int main() {

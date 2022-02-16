@@ -49,9 +49,9 @@ static void initialize(void) {
 	// Enabling interrupts
 	MCUSR = MCUSR   | 1<<7;
 	EICRA = EICRA   | 3;
-	
-	EIMSK = EIMSK   | 1<<7 | 1;
-	PCMSK1 = PCMSK1 | 1<<7;
+	// Button int
+	//EIMSK = EIMSK   | 1<<7 | 1;
+	//PCMSK1 = PCMSK1 | 1<<7;
 	
 	// Setting timer int enabled
 	TIMSK1 = TIMSK1|2;
@@ -147,6 +147,36 @@ ISR(TIMER1_COMPA_vect){
 	*timer = 0;
 	ENABLE();
 	yield();
+}
+// same as in part 1
+void lock(mutex *m) {
+	DISABLE();
+	if(m->locked==0){
+		// Mutex is free, just lock and return
+		m->locked = 1;
+	}
+	else{
+		// Mutex is not free, wait until it is free
+		enqueue(current,&(m->waitQ));
+		dispatch(dequeue(&readyQ));
+	}	
+	ENABLE();
+}
+
+// same as in part 1
+void unlock(mutex *m) {
+	DISABLE();
+	if(m->locked!=0){
+		enqueue(current,&readyQ);
+		if(m->waitQ!=NULL){
+			dispatch(dequeue(&(m->waitQ)));
+		}
+		else{
+			m->locked = 0;
+			dispatch(dequeue(&readyQ));
+		}
+	}
+	ENABLE();
 }
 // Not disabeling the interrupts since this will be inlined by any optimizing compiler
 uint16_t get_timer_int_counter(){

@@ -13,6 +13,13 @@ uint8_t button_counter;
 void reset_timer(){
 	*timer = 0;
 }
+// From lab2
+void printAt(long num, int pos) {
+	
+    write_char((num % 100) / 10 + '0', pos);
+	pos++;
+    write_char( num % 10 + '0', pos);
+}
 // ISR for the button pin
 ISR(PCINT1_vect) {
 	// Yield only on only one of the edges
@@ -33,24 +40,17 @@ void computePrimes(int pos) {
 		}
 	}
 }
-// From lab2
-void printAt(long num, int pos) {
-	
-    write_char((num % 100) / 10 + '0', pos);
-	pos++;
-    write_char( num % 10 + '0', pos);
-}
 // Loops around and relocks mutex after finnish
-void button(void){
+void button(int pos){
 	while(1){
 		
-		printAt(button_counter,4);
+		printAt(button_counter,pos);
 		lock(&button_mutex);
 		button_counter++;
 	}
 }
 // Loops around and relocks after finnish
-void blink(void){
+void blink(int a){
 	while(1){
 		lock(&blink_mutex);
 		toggle_led();
@@ -72,7 +72,7 @@ int main() {
 	lock(&primes_mutex);
 	// Spawns the threads
 	spawn(blink,0);
-	spawn(button,0);
+	spawn(button,4);
 	// spawn main thread i.e. a bussy task
 	computePrimes(0);
 }

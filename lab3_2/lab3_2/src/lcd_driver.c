@@ -129,7 +129,7 @@ void write_long(long num){
 		char buffer[2];
 		int temp_num = num-(num/10)*10;
 		num = num/10;
-		int_to_str(temp_num,&buffer);
+		int_to_str(temp_num,buffer);
 		write_char(buffer[0],pos);
 		pos--;
 	}
