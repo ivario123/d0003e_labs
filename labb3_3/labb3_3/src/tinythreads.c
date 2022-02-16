@@ -10,7 +10,6 @@
 #define NTHREADS        4
 #define SETSTACK(buf,a) *((unsigned int *)(buf)+8) = (unsigned int)(a) + STACKSIZE - 4; \
                         *((unsigned int *)(buf)+9) = (unsigned int)(a) + STACKSIZE - 4
-uint16_t timer_int_counter = 0;
 struct thread_block {
 	void (*function)(int);   // code to run
 	int arg;                 // argument to the above
@@ -28,7 +27,7 @@ thread readyQ  = NULL;
 thread current = &initp;
 
 int initialized = 0;
-
+// same as part 2 just no timer reg manipulation
 static void initialize(void) {
 	
 	// Setting power options
@@ -51,22 +50,14 @@ static void initialize(void) {
 	// Setting timer int enabled
 	TIMSK1 = TIMSK1|2;
 	
-	
-	
-	
-	
-	
     int i;
     for (i=0; i<NTHREADS-1; i++)
         threads[i].next = &threads[i+1];
     threads[NTHREADS-1].next = NULL;
-
-	
-
     initialized = 1;
 	ENABLE();
 }
-
+// modified from part 2
 static void enqueue(thread p, thread *queue) {
 	thread q = *queue;
 	*queue = p;
@@ -98,6 +89,7 @@ void spawn(void (* function)(int), int arg) {
 
 	DISABLE();
 	if (!initialized) initialize();
+	// modification from part 2
 	enqueue(current,&readyQ);
 	newp = dequeue(&freeQ);
 	newp->function = function;
@@ -113,9 +105,11 @@ void spawn(void (* function)(int), int arg) {
 	SETSTACK(&newp->context, &newp->stack);
 	//enqueue(newp, &readyQ);
 	ENABLE();
+	// Modification from part 2
 	dispatch(newp);
 }
 
+// basic just yields, not used
 void yield(void) {
 	DISABLE();
 	// Pluck the first thread from the queue
@@ -126,6 +120,7 @@ void yield(void) {
 	ENABLE();
 }
 
+// basic mutex
 void lock(mutex *m) {
 	DISABLE();
 	if(m->locked==0){
@@ -139,7 +134,7 @@ void lock(mutex *m) {
 	}	
 	ENABLE();
 }
-
+// basic mutex
 void unlock(mutex *m) {
 	DISABLE();
 	if(m->locked!=0){
