@@ -71,6 +71,7 @@ void init_lcd(void){
 }
 
 void write_char(char ch,int pos){
+	// Gaurantees that we only work with registers in the correct range
 	if(pos < 0 || pos > 5)
 		return;
 	uint16_t num = 0x0;
@@ -172,6 +173,7 @@ int is_prime(long num){
 	return 1;
 }
 
+// Toggles a led on or off
 void toggle_led(void){
 	LCDDR8= LCDDR8^1;
 }

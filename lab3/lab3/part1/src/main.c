@@ -2,20 +2,14 @@
 #define MYTEST_C
 #include "../include/tinythreads.h"
 #include "../include/lcd_driver.h"
-#include <stdbool.h>
 
-
-int pp = 0;
-mutex pp_mutex = MUTEX_INIT; 
-//void writeChar(char ch, int pos); // from lab 1
-
-//bool is_prime(long i); // from lab 1
-
-volatile void printAt(long num, int pos) {
+// From lab 2
+void printAt(long num, int pos) {
 	
     write_char((num % 100) / 10 + '0', pos);
     write_char( num % 10 + '0', pos+1);
 }
+// From lab 2
 void computePrimes(int pos) {
     long n;
 	
@@ -25,6 +19,7 @@ void computePrimes(int pos) {
         }
     }
 }
+// Access function as a last resort
 void next_prime(long *num){
 	while(1)
 	{
@@ -36,10 +31,18 @@ void next_prime(long *num){
 }
 
 uint8_t button_thingy = 0;
+// Access function as a last resort
+void increment_button_thingy(){
+	button_thingy++;
+}
+// Access function as a last resort
+uint8_t get_button_thingy(){
+	return button_thingy;
+}
 void button(){
 		
 		/*
-		// Uses two busy wait loops to ensure that the switch needs to be pushed and released before event trigger
+		// This one works, don't know why
 		uint8_t * ptr = 0x83E9;
 		while(1){
 			while(0==(PINB&(1<<7))>>7);
@@ -48,11 +51,13 @@ void button(){
 			while(1==(PINB&(1<<7))>>7);
 			
 		}*/
+		// This one does not work. I don't know why
 		uint8_t *ptr = &button_thingy;
 		while(1){
 			while(0 == (PINB&(1<<7))>>7);
-			*ptr = *ptr + 1;
-			printAt(*ptr,4);
+			increment_button_thingy();
+			//*ptr = *ptr + 1;
+			printAt(get_button_thingy(),4);
 			while(1 == (PINB&(1<<7))>>7);
 		}
 		
@@ -71,6 +76,6 @@ int main() {
 	spawn(button,0);
     spawn(blink,0);	
 	computePrimes(0);
-	return 0;
+	while(1);
 }
 #endif

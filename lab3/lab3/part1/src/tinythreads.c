@@ -10,7 +10,9 @@
 #define NTHREADS        4
 #define SETSTACK(buf,a) *((unsigned int *)(buf)+8) = (unsigned int)(a) + STACKSIZE - 4; \
                         *((unsigned int *)(buf)+9) = (unsigned int)(a) + STACKSIZE - 4
+// Global counter, this one works
 uint16_t timer_int_counter = 0;
+// A pointer to TCINT register
 volatile uint16_t * timer = (uint16_t *)0x84;
 struct thread_block {
     void (*function)(int);   // code to run
@@ -29,7 +31,7 @@ thread readyQ  = NULL;
 thread current = &initp;
 
 int initialized = 0;
-
+// All of the modifications are commented and should not affect the results
 static void initialize(void) {
 	// Setting a pointer to timer 1 reg
 	volatile uint16_t * timer = (uint16_t *)0x84;
@@ -55,7 +57,7 @@ static void initialize(void) {
 	TIMSK1 = TIMSK1|2;
 	
 	
-	
+	// Specifying the target interrupt period
 	uint16_t * target_time = (uint16_t *)0x88;
 	*target_time = 391;												// Approximate form of 50ms in clock cycles * 1024
 	
@@ -69,9 +71,9 @@ static void initialize(void) {
 	*timer = 0;
 
     initialized = 1;
-	ENABLE();
 }
 
+// From the basic lib
 static void enqueue(thread p, thread *queue) {
     p->next = NULL;
     if (*queue == NULL) {
@@ -83,7 +85,7 @@ static void enqueue(thread p, thread *queue) {
         q->next = p;
     }
 }
-
+// From the basic lib
 static thread dequeue(thread *queue) {
     thread p = *queue;
     if (*queue) {
@@ -95,6 +97,7 @@ static thread dequeue(thread *queue) {
     return p;
 }
 
+// From the basic lib
 static void dispatch(thread next) {
     if (setjmp(current->context) == 0) {
         current = next;
@@ -125,6 +128,7 @@ void spawn(void (* function)(int), int arg) {
     ENABLE();
 }
 
+// Enques current thread and starts the next thread in line
 void yield(void) {
 	DISABLE();
 	// Pluck the first thread from the queue
@@ -136,45 +140,19 @@ void yield(void) {
 }
 
 
-
+// Increments a timer counter and the resets the timer it self.
 ISR(TIMER1_COMPA_vect){
+	DISABLE();
 	timer_int_counter++;
 	*timer = 0;
+	ENABLE();
 	yield();
 }
-
-void lock(mutex *m) {
-	DISABLE();
-	if(m->locked==0){
-		// Mutex is free, just lock and return
-		m->locked = 1;
-	}
-	else{
-		// Mutex is not free, wait until it is free
-		enqueue(current,&(m->waitQ));
-		dispatch(dequeue(&readyQ));
-	}	
-	ENABLE();
-}
-
-void unlock(mutex *m) {
-	DISABLE();
-	if(m->locked!=0){
-		enqueue(current,&readyQ);
-		if(m->waitQ!=NULL){
-			dispatch(dequeue(&(m->waitQ)));
-		}
-		else{
-			m->locked = 0;
-			dispatch(dequeue(&readyQ));
-		}
-	}
-	ENABLE();
-}
-
+// Not disabeling the interrupts since this will be inlined by any optimizing compiler
 uint16_t get_timer_int_counter(){
 	return timer_int_counter;
 }
+// Not disabeling the interrupts since this will be inlined by any optimizing compiler
 void reset_timer_int_counter(){
 	timer_int_counter = 0;
 }

@@ -39,11 +39,10 @@ void printAt(long num, int pos) {
 }
 void button(void){
 	while(1){
+		
 		lock(&button_mutex);
-		lock(&button_print_mutex);
 		button_counter++;
 		printAt(button_counter,4);
-		unlock(&button_print_mutex);
 	}
 }
 void blink(void){
