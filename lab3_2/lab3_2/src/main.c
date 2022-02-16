@@ -3,48 +3,53 @@
 #include "../include/lcd_driver.h"
 #include <avr/interrupt.h>
 #include <stdbool.h>
+// Relevant mutexes ( could be moved to seperate file )
 mutex blink_mutex = MUTEX_INIT;
 mutex button_mutex = MUTEX_INIT;
 mutex primes_mutex = MUTEX_INIT;
-mutex button_print_mutex = MUTEX_INIT;
 uint16_t * timer = (uint16_t *)0x84;
+// Global button counter, just as in part 1 but this one works
 uint8_t button_counter;
 void reset_timer(){
 	*timer = 0;
 }
+// ISR for the button pin
 ISR(PCINT1_vect) {
-	// Yield only on press, not release
-		if(0!=(PINB&(1<<7))>>7)
+	// Yield only on only one of the edges
+		if(0!=PINB>>7)
 			unlock(&button_mutex);
 }
+//  Timer interrupt to unlock the blink mutex
 ISR(TIMER1_COMPA_vect){
 	unlock(&blink_mutex);
 	reset_timer();
 }
+// From lab2
 void computePrimes(int pos) {
 	long n;
-	
 	for(n = 1; ; n++) {
 		if (is_prime((long)n)) {
 			printAt(n, pos);
 		}
 	}
 }
-
+// From lab2
 void printAt(long num, int pos) {
 	
     write_char((num % 100) / 10 + '0', pos);
 	pos++;
     write_char( num % 10 + '0', pos);
 }
+// Loops around and relocks mutex after finnish
 void button(void){
 	while(1){
 		
+		printAt(button_counter,4);
 		lock(&button_mutex);
 		button_counter++;
-		printAt(button_counter,4);
 	}
 }
+// Loops around and relocks after finnish
 void blink(void){
 	while(1){
 		lock(&blink_mutex);
@@ -54,20 +59,21 @@ void blink(void){
 
 
 int main() {
-	LCDDR13 = LCDDR13|1;
+	// initiating the LCD
 	init_lcd();
+	// Setting a pointer to the TCINT CMP register
 	uint16_t * target_time = (uint16_t *)0x88;
-	
 	*target_time = 3906;												// Approximate form of 50ms in clock cycles * 
 	// reseting timer
 	*timer = 0;
-	
+	// Mutex setup
 	lock(&blink_mutex);
 	lock(&button_mutex);
 	lock(&primes_mutex);
+	// Spawns the threads
 	spawn(blink,0);
 	spawn(button,0);
+	// spawn main thread i.e. a bussy task
 	computePrimes(0);
-	return 0;
 }
 #endif

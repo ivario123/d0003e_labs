@@ -10,7 +10,6 @@
 #define NTHREADS        4
 #define SETSTACK(buf,a) *((unsigned int *)(buf)+8) = (unsigned int)(a) + STACKSIZE - 4; \
                         *((unsigned int *)(buf)+9) = (unsigned int)(a) + STACKSIZE - 4
-uint16_t timer_int_counter = 0;
 struct thread_block {
 	void (*function)(int);   // code to run
 	int arg;                 // argument to the above
@@ -62,9 +61,10 @@ static void initialize(void) {
 }
 
 static void enqueue(thread p, thread *queue) {
+	// Since we are appending to the start of the queue ( making it a stack ) we don't
+	// Need to worry about empty queues
 	thread q = *queue;
 	*queue = p;
-	
 	(*queue)->next = q;
 }
 
@@ -92,6 +92,7 @@ void spawn(void (* function)(int), int arg) {
 
 	DISABLE();
 	if (!initialized) initialize();
+	// Modification to ensure return to propper line
 	enqueue(current,&readyQ);
 	newp = dequeue(&freeQ);
 	newp->function = function;
@@ -105,11 +106,11 @@ void spawn(void (* function)(int), int arg) {
 		dispatch(dequeue(&readyQ));
 	}
 	SETSTACK(&newp->context, &newp->stack);
-	//enqueue(newp, &readyQ);
-	ENABLE();
+	// Modification to ensure that the new thread is started right away
 	dispatch(newp);
+	ENABLE();
 }
-
+// same as in part 1
 void yield(void) {
 	DISABLE();
 	// Pluck the first thread from the queue
@@ -120,6 +121,7 @@ void yield(void) {
 	ENABLE();
 }
 
+// same as in part 1
 void lock(mutex *m) {
 	DISABLE();
 	if(m->locked==0){
@@ -134,6 +136,7 @@ void lock(mutex *m) {
 	ENABLE();
 }
 
+// same as in part 1
 void unlock(mutex *m) {
 	DISABLE();
 	if(m->locked!=0){
