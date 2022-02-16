@@ -39,7 +39,7 @@ void increment_button_thingy(){
 uint8_t get_button_thingy(){
 	return button_thingy;
 }
-void button(){
+void button(int arg){
 		
 		/*
 		// This one works, don't know why
@@ -52,7 +52,7 @@ void button(){
 			
 		}*/
 		// This one does not work. I don't know why
-		uint8_t *ptr = &button_thingy;
+		//uint8_t *ptr = &button_thingy;
 		while(1){
 			while(0 == (PINB&(1<<7))>>7);
 			increment_button_thingy();
@@ -62,7 +62,7 @@ void button(){
 		}
 		
 }
-void blink(void){
+void blink(int arg){
 	while(1){
 		while(get_timer_int_counter() < 10);
 		reset_timer_int_counter();

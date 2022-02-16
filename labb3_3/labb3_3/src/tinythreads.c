@@ -84,9 +84,7 @@ static void dispatch(thread next) {
 }
 
 void spawn(void (* function)(int), int arg) {
-	
 	thread newp;
-
 	DISABLE();
 	if (!initialized) initialize();
 	// modification from part 2
@@ -103,7 +101,6 @@ void spawn(void (* function)(int), int arg) {
 		dispatch(dequeue(&readyQ));
 	}
 	SETSTACK(&newp->context, &newp->stack);
-	//enqueue(newp, &readyQ);
 	ENABLE();
 	// Modification from part 2
 	dispatch(newp);

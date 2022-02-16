@@ -60,6 +60,7 @@ int main() {
 	
 	*target_time = 3906;												// Approximate form of .5s in clock cycles * 
 	// reseting timer
+	printAt(0,4);
 	*timer = 0;
 	spawn(computePrimes,0);
 	spawn(bussy_task,0);

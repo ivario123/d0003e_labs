@@ -47,18 +47,18 @@ void init_lcd(void){
 	// Setting Bias
 	LCDCRB = LCDCRB&(~(1<<LCD2B));
 	// Setting duty cycle
-	LCDCRB = LCDCRB|((0b11<<LCDMUX0));
+	LCDCRB = LCDCRB|((3<<LCDMUX0));
 	// Setting number of active segments to 25
-	LCDCRB = LCDCRB|(0b111);
+	LCDCRB = LCDCRB|(7);
 	
 	
 	//-----------------------------------
 	// Frame rate manipulation
 	//-----------------------------------
 	// Set n = 16
-	LCDFRR = LCDFRR&(~(0b111<<LCDPS0));
+	LCDFRR = LCDFRR&(~(7<<LCDPS0));
 	// Set D = 8
-	LCDFRR = LCDFRR|(0b111);
+	LCDFRR = LCDFRR|(7);
 	
 	
 	//-----------------------------------
@@ -128,7 +128,7 @@ void write_long(long num){
 		char buffer[2];
 		int temp_num = num-(num/10)*10;
 		num = num/10;
-		int_to_str(temp_num,&buffer);
+		int_to_str(temp_num,buffer);
 		write_char(buffer[0],pos);
 		pos--;
 	}

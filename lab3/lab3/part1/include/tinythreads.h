@@ -7,12 +7,12 @@
 #ifndef _TINYTHREADS_H
 #define _TINYTHREADS_H
 
-#define TIMER_SCALING_1024 0b101
-#define TIMER_SCALING_256  0b100
-#define TIMER_SCALING_64   0b011
-#define TIMER_SCALING_8    0b010
-#define TIMER_SCALING_1    0b001
-#define TIMER_STOP		   0b000
+#define TIMER_SCALING_1024 5
+#define TIMER_SCALING_256  4
+#define TIMER_SCALING_64   3
+#define TIMER_SCALING_8    2
+#define TIMER_SCALING_1    1
+#define TIMER_STOP		   0
 #include "lcd_driver.h"
 
 struct thread_block;
