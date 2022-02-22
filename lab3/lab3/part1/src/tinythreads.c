@@ -184,6 +184,8 @@ uint16_t get_timer_int_counter(){
 }
 // Not disabeling the interrupts since this will be inlined by any optimizing compiler
 void reset_timer_int_counter(){
+	DISABLE();
 	timer_int_counter = 0;
+	ENABLE();
 }
 

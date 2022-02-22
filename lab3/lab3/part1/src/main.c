@@ -41,19 +41,6 @@ uint8_t get_button_thingy(){
 	return button_thingy;
 }
 void button(int arg){
-		
-		/*
-		// This one works, don't know why
-		uint8_t * ptr = 0x83E9;
-		while(1){
-			while(0==(PINB&(1<<7))>>7);
-			printAt(*ptr,4);
-			*ptr = *ptr+1;
-			while(1==(PINB&(1<<7))>>7);
-			
-		}*/
-		// This one does not work. I don't know why
-		//	uint8_t *ptr = &button_thingy;
 		while(1){
 			while(1 == (PINB&(1<<7))>>7);
 			increment_button_thingy();
