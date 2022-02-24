@@ -13,10 +13,16 @@ void init_pulse_gens(pulse_gen * self, uint8_t freq, uint8_t bit_offset,io_objec
 	self->bit_offset = bit_offset;
 	self->io_reg =  io_reg;
 	self->running = 0;
+	//write_8(&PORTE,0);
+	DDRE = DDRE|0b1010000;
+	PORTE = PORTE|0b1010000;
+	//write_8_field(&PORTE,1,1,6);
 }
-void set_value(pulse_gen *self, uint8_t state){
-	AFTER(MSEC(1000/(self->freq)),self,set_value,!state);
-	SYNC(self->io_reg,toggle_io_bit,self->bit_offset);
+void pulse(pulse_gen *self, uint8_t arg){
+	uint8_t delay = 1000/self->freq;
+	AFTER(MSEC(delay),self,pulse,0);
+	SYNC(self->io_reg,set_low,self->bit_offset);
+	AFTER(MSEC(delay/2),self->io_reg,set_high,self->bit_offset);
 	if(self->running != 1)
 		self->running = 1;
 }

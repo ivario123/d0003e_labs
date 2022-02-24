@@ -24,7 +24,7 @@ typedef struct{
 
 void init_pulse_gens(pulse_gen * self, uint8_t freq, uint8_t bit_offset,io_object * io_reg);
 // used to toggle the pulse gen at the specified freq
-void set_value(pulse_gen *self, uint8_t state);
+void pulse(pulse_gen *self, uint8_t arg);
 
 void change_freq(pulse_gen *self,uint8_t freq);
 

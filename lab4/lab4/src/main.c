@@ -15,28 +15,14 @@ pulse_gen pulse_gens[2];
 app_object app;
 io_object io;
 button_object button;
-inline void init(){
-	// Set pine to output
-	write_8(&PORTE,0);
-	write_8_field(&PORTE,1,1,6);
-}
 
 int main(void)
 {
-	init();
-	init_io(&io,&PINE);
-	// Init the pulse gens
+	init_io(&io,(uint8_t *)(0x2c));
 	init_pulse_gens(pulse_gens,1,4,&io);
-	init_pulse_gens(pulse_gens+1,2,6,&io);
-	init_app(&app,pulse_gens,1);
+	init_pulse_gens(pulse_gens+1,3,6,&io);
+	init_app(&app,pulse_gens,2);
 	init_button(&button,&app);
-	//SYNC(&app,update_display,0);
-	//SYNC(pulse_gens,set_value,0);
-	return TINYTIMBER(&app,app_main,0);
-	
-    /* Replace with your application code */
-    while (1) 
-    {
-    }
+	return TINYTIMBER(&app,app_entry,0);
 }
 

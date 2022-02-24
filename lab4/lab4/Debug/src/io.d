@@ -1,5 +1,5 @@
 src/io.d src/io.o: ../src/io.c ../src/../include/io.h \
- ../src/../include/TinyTimber.h \
+ ../src/../include/TinyTimber.h ../src/../include/reg_api.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdint-gcc.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\sfr_defs.h \
@@ -16,6 +16,8 @@ src/io.d src/io.o: ../src/io.c ../src/../include/io.h \
 ../src/../include/io.h:
 
 ../src/../include/TinyTimber.h:
+
+../src/../include/reg_api.h:
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdint-gcc.h:
 
