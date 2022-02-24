@@ -25,7 +25,7 @@ long dict_arr[] = {
 /************************************************************************/
 /*								TASK 1									*/
 /************************************************************************/
-inline void init_lcd(void){
+void init_lcd(void){
 	// Using inlined accesses makes the optimization much more agressive
 	// it results in a much more efficiant implemantation
 	//-----------------------------------
@@ -117,19 +117,6 @@ void write_char(char ch,int pos){
 	
 	
 }
-
-void print_at(int num, int first_pos, int length){
-	if(first_pos+length> MAX_POS)
-		return;
-	for(int i = 0; i < length; i++){
-		// Grab lowest digit
-		int temp_num = num%10;
-		// Remove lowest digit
-		num = num/10;
-		// if length+ first_pos exceeds the number of segments, wrap around
-		write_char(temp_num+48,(first_pos+length-i)%MAX_POS);
-	}
-}
 void write_string(char* ch, int first_pos){
 	first_pos = first_pos%MAX_POS;
 	for(int i = first_pos; i < MAX_POS; i++){
@@ -158,7 +145,7 @@ void write_long(long num){
 		int temp_num = num-(num/10)*10;
 		num = num/10;
 		int_to_str(temp_num,buffer);
-		write_char(buffer,pos);
+		write_char(buffer[0],pos);
 		pos--;
 	}
 	while(pos>=0){
@@ -182,6 +169,13 @@ void swap_segment(void){
 	
 	LCDDR13 = LCDDR13^1;
 	LCDDR18 = LCDDR18^1;
+}
+void print_at(uint8_t num, uint8_t pos, uint8_t width){
+	for(int i = width-1; i >= 0; i--){
+		uint8_t temp = num%10;
+		num = num/10;
+		write_char(temp+48,pos+i);
+	}
 }
 
 int is_prime(long num){

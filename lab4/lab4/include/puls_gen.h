@@ -19,6 +19,7 @@ typedef struct{
 	uint8_t freq;				// Frequenzy in hz
 	uint8_t bit_offset;			// Which bit is responsible for the pin
 	io_object *io_reg;			// The current reg, defaults to PINE
+	uint8_t running;
 }  pulse_gen;
 
 void init_pulse_gens(pulse_gen * self, uint8_t freq, uint8_t bit_offset,io_object * io_reg);

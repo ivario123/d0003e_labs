@@ -10,17 +10,17 @@
 #define APP_H_
 
 #include "TinyTimber.h"
-#include "lcd_driver.h"
 #include "puls_gen.h"
-typedef struct{
+#include "lcd_driver.h"
+struct App_Object{
 	Object super;
-	pulse_gen pulse_gens*;
+	pulse_gen *pulse_gens;
 	uint8_t current_pulsegen;
 	uint8_t number_of_pulsegens;
-	} app_object;
-
-void next_pulse_gen;
-void set_freq;
-void update_display;
-
+	} typedef app_object;
+void itterate_freq(app_object * self,int8_t increment);
+void init_app(app_object * self,pulse_gen *pulse_gens,uint8_t number_of_pulsegens);
+void itterate_pulse_gen(app_object * self,int8_t dirrection);
+void update_display(app_object * self, int arg);
+void app_main(app_object * self,int arg);
 #endif /* UI_H_ */

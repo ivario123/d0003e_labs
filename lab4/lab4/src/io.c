@@ -5,7 +5,7 @@
  *  Author: ivarj
  */ 
 #include "../include/io.h"
-
+#include <avr/io.h>
 void init_io(io_object *self, uint8_t *reg){
 	self->super.ownedBy = NULL;
 	self->super.wantedBy = NULL;

@@ -5,8 +5,8 @@
 #define MIN_POS 0
 #define MAX_POS 5
 #include "string.h"
+#include "reg_api.h"
 #include <stdint-gcc.h>
-#include "../include/reg_api.h"
 #include <avr/io.h>
 /**
 * Initiates the lcd screen with predefined parameters
@@ -14,7 +14,7 @@
 * @param pos the position on screen [0,1,...,5]
 **/
 void init_lcd (void);
-
+void print_at(uint8_t num, uint8_t pos, uint8_t width);
 /**
 * Writes a character to the given position on screen.
 * @param ch the character that is to be written on screen
@@ -52,9 +52,4 @@ void write_long(long num);
 * Blinks a led segment every half second
 **/
 void swap_segment(void);
-
-/**
-* Prints a number starting at a certain segment
-**/
-void print_at(int num, int first_pos, int length);
 #endif /* LCD_DRIVER_H_ */

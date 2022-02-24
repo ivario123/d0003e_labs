@@ -39,12 +39,14 @@ SUBDIRS :=  \
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
+../src/button.c \
 ../src/io.c \
 ../src/lcd_driver.c \
 ../src/main.c \
 ../src/pulse_gen.c \
 ../src/string.c \
-../src/TinyTimber.c
+../src/TinyTimber.c \
+../src/app.c
 
 
 PREPROCESSING_SRCS += 
@@ -54,36 +56,44 @@ ASM_SRCS +=
 
 
 OBJS +=  \
+src/button.o \
 src/io.o \
 src/lcd_driver.o \
 src/main.o \
 src/pulse_gen.o \
 src/string.o \
-src/TinyTimber.o
+src/TinyTimber.o \
+src/app.o
 
 OBJS_AS_ARGS +=  \
+src/button.o \
 src/io.o \
 src/lcd_driver.o \
 src/main.o \
 src/pulse_gen.o \
 src/string.o \
-src/TinyTimber.o
+src/TinyTimber.o \
+src/app.o
 
 C_DEPS +=  \
+src/button.d \
 src/io.d \
 src/lcd_driver.d \
 src/main.d \
 src/pulse_gen.d \
 src/string.d \
-src/TinyTimber.d
+src/TinyTimber.d \
+src/app.d
 
 C_DEPS_AS_ARGS +=  \
+src/button.d \
 src/io.d \
 src/lcd_driver.d \
 src/main.d \
 src/pulse_gen.d \
 src/string.d \
-src/TinyTimber.d
+src/TinyTimber.d \
+src/app.d
 
 OUTPUT_FILE_PATH +=lab4.elf
 
@@ -99,6 +109,13 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+src/button.o: ../src/button.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega169p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\gcc\dev\atmega169p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
 src/io.o: ../src/io.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
@@ -135,6 +152,13 @@ src/string.o: ../src/string.c
 	
 
 src/TinyTimber.o: ../src/TinyTimber.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega169p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\gcc\dev\atmega169p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+src/app.o: ../src/app.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega169p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\gcc\dev\atmega169p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
