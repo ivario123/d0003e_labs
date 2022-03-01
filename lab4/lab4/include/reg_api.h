@@ -8,6 +8,8 @@
 #ifndef REG_API_H
 #define REG_API_H
 #include <stdint-gcc.h>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdiscarded-qualifiers"
 inline void read_8(uint8_t *reg, uint8_t *ret){
 	*ret = *reg;
 }
@@ -38,5 +40,5 @@ inline void read_8_field(uint8_t *reg, uint8_t* ret, uint8_t field_width,uint8_t
 }
 
 
-
+#pragma GCC diagnostic pop
 #endif

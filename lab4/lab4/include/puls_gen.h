@@ -10,19 +10,16 @@
 #define PULS_GEN_H_
 
 #include "TinyTimber.h"
-#include "reg_api.h"
 #include "io.h"
 #include <avr/io.h>
-
+#define init_pulse_gen(freq, bit_offset,reg_handeler) {initObject(),freq,bit_offset,reg_handeler}
 typedef struct{
 	Object super;				// Castable
 	uint8_t freq;				// Frequenzy in hz
 	uint8_t bit_offset;			// Which bit is responsible for the pin
-	io_object *io_reg;			// The current reg, defaults to PINE
-	uint8_t running;
+	io_object *reg_handeler;			// The current reg, defaults to PINE
 }  pulse_gen;
-
-void init_pulse_gens(pulse_gen * self, uint8_t freq, uint8_t bit_offset,io_object * io_reg);
+void set_pulse_high(pulse_gen * self, uint8_t delay);
 // used to toggle the pulse gen at the specified freq
 void pulse(pulse_gen *self, uint8_t arg);
 

@@ -8,17 +8,18 @@
 
 #ifndef BUTTON_H_
 #define BUTTON_H_
-#define cool_delay 250
 #include "TinyTimber.h"
 #include "app.h"
 #include "reg_api.h"
+#include "io.h"
 #include <stdint-gcc.h>
+#define init_button(app,io) {initObject(),app,io}
 
 typedef struct{
 	Object super;
 	app_object *app;
+	io_object *io;
 	} button_object;
-void init_button(button_object *self, app_object *app);
 void left_right_handeler(button_object *self,int arg);
 void upp_down_press_handeler(button_object *self, int arg);
 

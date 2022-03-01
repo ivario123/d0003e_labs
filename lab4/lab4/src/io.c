@@ -6,26 +6,39 @@
  */ 
 #include "../include/io.h"
 #include <avr/io.h>
-void init_io(io_object *self, uint8_t *reg){
-	self->super.ownedBy = NULL;
-	self->super.wantedBy = NULL;
-	self->reg = reg;	
+volatile void toggle_bit(io_object *self, uint8_t offset){
+	if(offset > 7)
+		return;
+	uint8_t field = 1<<(offset);
+	PINE = PINE ^ field;
 }
-void toggle_io_bit(io_object *self,uint8_t offset){
+volatile void set_high(io_object *self,uint8_t offset){
 	if (offset >7)
 		return;
-	write_8_field(&PINE,1,1,offset);
+	uint8_t field = 1<<(offset);
+	PINE = PINE|(field);
 	
 }
-void set_high(io_object *self,uint8_t offset){
+volatile void set_low(io_object *self,uint8_t offset){
 	if (offset >7)
 		return;
-	PINE = PINE|(1<<offset);
+	uint8_t field = ~(1<<offset);
+	PINE = PINE&field;
 	
 }
-void set_low(io_object *self,uint8_t offset){
+volatile uint8_t read_bit_E(io_object *self,uint8_t offset){
 	if (offset >7)
-		return;
-	PINE = PINE&(~(1<<offset));
-	
+	return;
+	uint8_t field_mask = 1<<offset;
+	uint8_t reg_val = PINE;
+	uint8_t field_val = (reg_val&field_mask)>>offset;
+	return field_val;
+}
+volatile uint8_t read_bit_B(io_object *self,uint8_t offset){
+	if (offset >7)
+	return;
+	uint8_t field_mask = 1<<offset;
+	uint8_t reg_val = PINB;
+	uint8_t field_val = (reg_val&field_mask)>>offset;
+	return field_val;
 }

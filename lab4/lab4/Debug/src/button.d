@@ -1,8 +1,7 @@
 src/button.d src/button.o: ../src/button.c ../src/../include/button.h \
  ../src/../include/TinyTimber.h ../src/../include/app.h \
- ../src/../include/puls_gen.h ../src/../include/reg_api.h \
+ ../src/../include/puls_gen.h ../src/../include/io.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdint-gcc.h \
- ../src/../include/io.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\sfr_defs.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\inttypes.h \
@@ -14,7 +13,8 @@ src/button.d src/button.o: ../src/button.c ../src/../include/button.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\version.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\fuse.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h \
- ../src/../include/lcd_driver.h ../src/../include/string.h
+ ../src/../include/lcd_driver.h ../src/../include/string.h \
+ ../src/../include/reg_api.h
 
 ../src/../include/button.h:
 
@@ -24,11 +24,9 @@ src/button.d src/button.o: ../src/button.c ../src/../include/button.h \
 
 ../src/../include/puls_gen.h:
 
-../src/../include/reg_api.h:
+../src/../include/io.h:
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdint-gcc.h:
-
-../src/../include/io.h:
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h:
 
@@ -55,3 +53,5 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 ../src/../include/lcd_driver.h:
 
 ../src/../include/string.h:
+
+../src/../include/reg_api.h:
