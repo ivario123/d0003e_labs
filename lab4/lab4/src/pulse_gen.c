@@ -5,16 +5,17 @@
  *  Author: ivarj
  */ 
 #include "../include/puls_gen.h"
+
 void pulse(pulse_gen *self, uint8_t arg){
-	if(self->freq !=0){
-		uint8_t delay = 1000/self->freq;
-		SYNC(self->reg_handeler,set_low,self->bit_offset);
-		AFTER(MSEC(delay/2),self->reg_handeler,set_high,self->bit_offset);
-		AFTER(MSEC(delay),self,pulse,0);
-	}
-	else{
-		AFTER(MSEC(1000),self,pulse,0);
-	}
+	if(self->freq == 0)
+		return;
+	uint64_t delay = 1000000/self->freq;
+	SYNC(self->reg_handeler,toggle_bit,self->bit_offset);
+	self->message = AFTER(USEC(delay/2),self,pulse,0);
+}
+void set_pulse_low(pulse_gen *self, int arg){
+	SYNC(self->reg_handeler,set_low,self->bit_offset);
+	
 }
 void set_pulse_high(pulse_gen * self, uint8_t delay){
 	SYNC(self->reg_handeler,set_high,self->bit_offset);

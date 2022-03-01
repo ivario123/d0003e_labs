@@ -1,43 +1,31 @@
 /*
  * button.c
  *
- * Created: 2022-02-23 08:33:01
+ * Created: 2022-03-01 16:20:33
  *  Author: ivarj
- */ 
+ */
 #include "../include/button.h"
-#define cool_delay 500
-void left_right_handeler(button_object *self,int arg){
-	volatile uint8_t left,right;
-	left = SYNC(self->io,read_bit_E,2);
-	right = SYNC(self->io, read_bit_E,3);
-	if(right +left != 1)
-		return;
-	if(right == 0){
-		ASYNC(self->app,change_pulse_gen,1);
-	}
-	else if(left == 0){
-		ASYNC(self->app,change_pulse_gen,0);
-	}
+void handle_joystick(button_object *self,int arg){
+	uint8_t up,down,press,left,right;
+	read_8_field(&PINB,&press,1,4);
+	read_8_field(&PINB,&up,1,6);
+	read_8_field(&PINB,&down,1,7);
+	read_8_field(&PINE,&left,1,2);
+	read_8_field(&PINE,&right,1,3);
 	
-	
-}
-void upp_down_press_handeler(button_object *self, int arg){
-	volatile uint8_t up,down,press;
-	press = SYNC(self->io,read_bit_B,4);
-	down = SYNC(self->io, read_bit_B,7);
-	up = SYNC(self->io, read_bit_B,6);
-	if(up+down+press != 2)
-		return;
+	if(up+down+press+left+right != 4)
+	return;
 
 	if(up == 0)
 		ASYNC(self->app,itterate_freq,1);
 	else if(down == 0)
 		ASYNC(self->app,itterate_freq,-1);
-	else if(press == 0){
+	else if(press == 0)
 		ASYNC(self->app,save_freq,0);
-	}
-	else
-		return;
-	AFTER(MSEC(cool_delay),self,upp_down_press_handeler,arg);
-	
+	else if(right == 0)
+		ASYNC(self->app,change_pulse_gen,1);
+	else if(left == 0)
+		ASYNC(self->app,change_pulse_gen,0);
+
+	AFTER(MSEC(250),self,handle_joystick,arg);
 }

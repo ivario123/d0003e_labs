@@ -16,7 +16,8 @@ src/main.d src/main.o: ../src/main.c \
  ../src/../include/io.h ../src/../include/app.h \
  ../src/../include/puls_gen.h ../src/../include/lcd_driver.h \
  ../src/../include/string.h ../src/../include/reg_api.h \
- ../src/../include/button.h ../src/../include/app.h
+ ../src/../include/button.h ../src/../include/app.h \
+ ../src/../include/interrupt.h ../src/../include/button.h
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h:
 
@@ -65,3 +66,7 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\
 ../src/../include/button.h:
 
 ../src/../include/app.h:
+
+../src/../include/interrupt.h:
+
+../src/../include/button.h:

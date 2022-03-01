@@ -11,15 +11,16 @@
 #include "../include/puls_gen.h"
 #include "../include/app.h"
 #include "../include/button.h"
+#include "../include/interrupt.h"
 io_object io = init_io();
-pulse_gen pulse_gens[2] = {init_pulse_gen(1, 4,&io),init_pulse_gen(1, 6,&io)};
+pulse_gen pulse_gens[2] = {init_pulse_gen(1, 4,&io),init_pulse_gen(2, 6,&io)};
 app_object app = init_app(pulse_gens,0,2);
-button_object button = init_button(&app,&io);
+button_object button = init_button(&app);
+interrupt_object interrupts = init_interrupt(&button);
+
 void init_outputs(){
 	write_8_field(&DDRE,1,1,4);
 	write_8_field(&DDRE,1,1,6);
-	write_8_field(&PORTE,1,1,4);
-	write_8_field(&PORTE,1,1,6);
 }
 void init_joystick(){
 	
@@ -34,17 +35,18 @@ void init_joystick(){
 	EIMSK = (1<<PCIE1) | (1<<PCIE0) | EIMSK;
 	//write_8_field(&EIMSK,3,2,6); // enable all ext int
 	write_8_field(&PCMSK0,3,2,2); // Enable interrupts on PCINT2,3
-	write_8_field(&PCMSK1,0b11,2,6); // Enable intrrupts PCINT15,14
+	write_8_field(&PCMSK1,0b11,2,6); // Enable interrupts PCINT15,14
 	write_8_field(&PCMSK1,1,1,4);
 	// int 15,14,12,3,2
-	INSTALL(&button,left_right_handeler,IRQ_PCINT0);
-	INSTALL(&button,upp_down_press_handeler,IRQ_PCINT1);
+	INSTALL(&interrupts,left_right_handeler,IRQ_PCINT0);
+	INSTALL(&interrupts,upp_down_press_handeler,IRQ_PCINT1);
 }
 int main(void)
 {
 	init_lcd();
 	init_outputs();
 	init_joystick();
+	
 	return TINYTIMBER(&app,app_entry,0);
 }
 

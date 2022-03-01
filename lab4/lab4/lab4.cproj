@@ -150,6 +150,9 @@
     <Compile Include="include\button.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="include\interrupt.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="include\io.h">
       <SubType>compile</SubType>
     </Compile>
@@ -172,6 +175,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\button.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\interrupt.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\io.c">

@@ -4,6 +4,8 @@
 
 src\button.c
 
+src\interrupt.c
+
 src\io.c
 
 src\lcd_driver.c

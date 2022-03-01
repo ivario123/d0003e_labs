@@ -23,6 +23,6 @@ struct App_Object{
 void save_freq(app_object * self,uint8_t arg);
 void itterate_freq(app_object * self,int8_t increment);
 void change_pulse_gen(app_object * self,uint8_t dirrection);
-void app_main_loop(app_object * self, int arg);
+void update_display(app_object * self, int arg);
 void app_entry(app_object *self,int arg);
 #endif /* UI_H_ */
