@@ -1,9 +1,9 @@
 #ifndef LCD_DRIVER_H_
 #define LCD_DRIVER_H_
-
-
+// Relevant defines
 #define MIN_POS 0
 #define MAX_POS 5
+// Importing needed libs
 #include "string.h"
 #include "reg_api.h"
 #include <stdint-gcc.h>
@@ -14,6 +14,10 @@
 * @param pos the position on screen [0,1,...,5]
 **/
 void init_lcd (void);
+/**
+* Prints a number of width digits starting at position
+* pos
+**/
 void print_at(uint8_t num, uint8_t pos, uint8_t width);
 /**
 * Writes a character to the given position on screen.
@@ -21,35 +25,4 @@ void print_at(uint8_t num, uint8_t pos, uint8_t width);
 * @param pos the position on screen [0,1,...,5]
 **/
 void write_char(char ch,int pos);
-
-/**
-* Writes a whole string to the screen, if it's longer than 6 elements then it will wrap around
-* @param char* ch the string that is to be written to screen
-* @param first_pos the on which segment the string should be started
-* @return 0 if success
-**/
-void write_string(char* ch, int first_pos);
-
-/**
-* Checks if a number is a prime number
-* @param num the number the user wants to check
-* @return 1 if it is, 0 if not
-**/
-int is_prime(long num);
-
-/**
-* Toggles a segment on the display
-**/
-void toggle_led(void);
-
-/**
-* Writes a long to the lcd display
-* @param num the number to be displayed
-**/
-void write_long(long num);
-
-/**
-* Blinks a led segment every half second
-**/
-void swap_segment(void);
 #endif /* LCD_DRIVER_H_ */
