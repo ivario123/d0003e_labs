@@ -15,8 +15,7 @@ void pulse(pulse_gen *self, uint8_t arg){
 void disable(pulse_gen *self, int arg){
 	ABORT(self->last_message);
 	self->running = 0;
-	SYNC(self->reg_handeler,set_low,self->bit_offset);
-	
+	ASYNC(self->reg_handeler,set_low,self->bit_offset);
 }
 // Gets applied in the next cycle
 void change_freq(pulse_gen *self,uint8_t freq){

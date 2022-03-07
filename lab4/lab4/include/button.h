@@ -16,8 +16,9 @@
 typedef struct{
 	Object super;
 	app_object *app;
+	uint8_t looping;
 }	button_object;
 
 void handle_joystick(button_object *self,int arg);
-
+void handle_left_right(button_object * self,int arg);
 #endif /* BUTTON_H_ */

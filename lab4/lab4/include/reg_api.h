@@ -30,7 +30,7 @@ inline void write_16(uint8_t *reg, uint16_t val){
 /**
 * In practice it is a modify function, but write seems more appropriate for my use case
 **/
-inline void write_8_field(volatile uint8_t *reg,uint8_t value, uint8_t field_width,uint8_t offset){
+inline void write_8_field(uint8_t *reg,uint8_t value, uint8_t field_width,uint8_t offset){
 	uint8_t temp;
 	read_8(reg,&temp);
 	// Masks out the relevant bits
@@ -41,7 +41,7 @@ inline void write_8_field(volatile uint8_t *reg,uint8_t value, uint8_t field_wid
 /**
 * Reads a field from an address. 
 **/
-inline void read_8_field(volatile uint8_t *reg, uint8_t* ret, uint8_t field_width,uint8_t offset){
+inline void read_8_field(uint8_t *reg, uint8_t* ret, uint8_t field_width,uint8_t offset){
 	uint8_t temp;
 	read_8(reg,&temp);
 	// Masks out the relevant bits
