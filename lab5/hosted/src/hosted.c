@@ -56,8 +56,9 @@ int main(int args[]){
     printf("Hey, welcome to the simulator!\nPress : '%c' to enqueue in north direction\nPress : '%c' to enqueue in south direction\nPress : '%c' to exit\n=================================\n",interface_north,interface_south,interface_exit);
     pthread_t console_thread,garbage;
     int port = open_port();
-    write_data(port);
     printf("open port returned : %d",port);
+    write_data(port);
+    read_bit(port);
     exit_port(port);
 
     pthread_create(&console_thread,NULL,&handle_queues,NULL);

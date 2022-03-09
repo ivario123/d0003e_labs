@@ -1,7 +1,7 @@
 #include "serial.h"
 
 
-const char* serial_port = "/dev/ttyttyS0";
+const char* serial_port = "/dev/ttyACM0";
 #define baud_rate 9600
 
 struct termios control_field;
@@ -10,6 +10,7 @@ int open_port(void){
     // Define a file descriptor
     int file_desc;
     // Open the current port 
+    printf("%s",serial_port);
     file_desc = open(serial_port, O_RDWR);
     // Handle no such port
     if(file_desc  == -1){
@@ -45,15 +46,15 @@ int open_port(void){
 }
 int write_data(int file_desc){
     unsigned char msg[] = { 'H', 'e', 'l', 'l', 'o', '\r' };
+    printf("\n%d : ",'H');
     write(file_desc, msg, sizeof(msg));
 }
 int read_bit(int file_desc){
     char read_buf [256];
 
-    // Read bytes. The behaviour of read() (e.g. does it block?,
-    // how long does it block for?) depends on the configuration
-    // settings above, specifically VMIN and VTIME
+    
     int n = read(file_desc, &read_buf, sizeof(read_buf));
+    printf("%d\n",read_buf[0]);
 }
 int exit_port(int file_desc){
     close(file_desc);
