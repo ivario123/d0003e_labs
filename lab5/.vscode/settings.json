@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "stdio.h": "c",
-        "game.h": "c"
+        "game.h": "c",
+        "serial.h": "c",
+        "api.h": "c"
     }
 }

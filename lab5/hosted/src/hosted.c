@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "game.h"
+#include "serial.h"
 
 #define interface_south 's'
 #define interface_north 'n'
@@ -54,6 +55,11 @@ void *handle_garbage(void * arg){
 int main(int args[]){
     printf("Hey, welcome to the simulator!\nPress : '%c' to enqueue in north direction\nPress : '%c' to enqueue in south direction\nPress : '%c' to exit\n=================================\n",interface_north,interface_south,interface_exit);
     pthread_t console_thread,garbage;
+    int port = open_port();
+    write_data(port);
+    printf("open port returned : %d",port);
+    exit_port(port);
+
     pthread_create(&console_thread,NULL,&handle_queues,NULL);
     pthread_create(&garbage,NULL,&handle_garbage,NULL);
     pthread_join(console_thread,NULL);
