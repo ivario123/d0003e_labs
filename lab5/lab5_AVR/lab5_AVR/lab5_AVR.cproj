@@ -46,7 +46,7 @@
     <com_atmel_avrdbg_tool_atmelice>
       <ToolOptions>
         <InterfaceProperties>
-          <JtagDbgClock>200000</JtagDbgClock>
+          <JtagDbgClock>800000</JtagDbgClock>
         </InterfaceProperties>
         <InterfaceName>JTAG</InterfaceName>
       </ToolOptions>
@@ -55,7 +55,7 @@
       <ToolName>Atmel-ICE</ToolName>
     </com_atmel_avrdbg_tool_atmelice>
     <avrtoolinterface>JTAG</avrtoolinterface>
-    <avrtoolinterfaceclock>200000</avrtoolinterfaceclock>
+    <avrtoolinterfaceclock>800000</avrtoolinterfaceclock>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
@@ -136,15 +136,6 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="include\app.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="include\interrupt.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="include\io.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="include\lcd_driver.h">
       <SubType>compile</SubType>
     </Compile>
@@ -155,15 +146,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="include\TinyTimber.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\app.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\interrupt.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\io.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\lcd_driver.c">
