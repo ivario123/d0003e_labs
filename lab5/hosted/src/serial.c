@@ -4,6 +4,7 @@
 const char* serial_port = "/dev/ttyACM0";
 #define baud_rate 9600
 
+int port;
 struct termios control_field;
 int open_port(void){
 
@@ -38,25 +39,28 @@ int open_port(void){
     control_field.c_iflag &= ~(IXON | IXOFF | IXANY);
     // remove all input modification of the data
     control_field.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL);
+    control_field.c_cc[VMIN] = 0;
+    control_field.c_cc[VTIME] = 10;
     if (tcsetattr(file_desc, TCSANOW, &control_field) != 0) {  
         return -2;
     }
 
-    return file_desc;
+    port = file_desc;
 }
-int write_data(int file_desc){
+int write_data(void * arg){
     unsigned char msg[] = { 'H', 'e', 'l', 'l', 'o', '\r' };
     printf("\n%d : ",'H');
-    write(file_desc, msg, sizeof(msg));
+    write(port, msg, sizeof(msg));
 }
-int read_bit(int file_desc){
+void * read_bit(void *arg){
     char read_buf [256];
-
-    
-    int n = read(file_desc, &read_buf, sizeof(read_buf));
-    printf("%d\n",read_buf[0]);
+    while(1){
+        write_data(NULL);
+        int n = read(port, &read_buf, sizeof(read_buf));
+        printf("%d\n",read_buf[0]);
+    }
 }
-int exit_port(int file_desc){
-    close(file_desc);
+int exit_port(void * arg){
+    close(port);
 
 }

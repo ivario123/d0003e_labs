@@ -54,16 +54,19 @@ void *handle_garbage(void * arg){
 
 int main(int args[]){
     printf("Hey, welcome to the simulator!\nPress : '%c' to enqueue in north direction\nPress : '%c' to enqueue in south direction\nPress : '%c' to exit\n=================================\n",interface_north,interface_south,interface_exit);
-    pthread_t console_thread,garbage;
+    pthread_t console_thread,garbage,reader;
     int port = open_port();
     printf("open port returned : %d",port);
-    write_data(port);
-    read_bit(port);
-    exit_port(port);
 
     pthread_create(&console_thread,NULL,&handle_queues,NULL);
     pthread_create(&garbage,NULL,&handle_garbage,NULL);
+    pthread_create(&reader,NULL,&read_bit,&port);
     pthread_join(console_thread,NULL);
     pthread_join(garbage,NULL);
+    pthread_join(reader,NULL);
+
+    while(1)
+        write_data(NULL);
+    exit_port(NULL);
     
 }

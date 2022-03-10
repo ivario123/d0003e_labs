@@ -8,10 +8,9 @@
 #include "API.h"
 
 
-
 int open_port(void);
-int write_data(int file_desc);
-int read_bit(int file_desc);
-int exit_port(int file_desc);
+int write_data(void * arg);
+void * read_bit(void *arg);
+int exit_port(void * arg);
 
 #endif
